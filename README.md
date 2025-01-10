@@ -1,4 +1,4 @@
-# Your startup name here
+# Rappt
 
 [My Notes](notes.md)
 
