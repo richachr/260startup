@@ -1,12 +1,16 @@
 # CS 260 Notes
 
-[My startup](https://simon.cs260.click)
+[My startup](https://github.com/richachr/260startup)
 
 ## Helpful links
 
 - [Course instruction](https://github.com/webprogramming260)
 - [Canvas](https://byu.instructure.com)
 - [MDN](https://developer.mozilla.org)
+
+## Specification Notes
+
+I learned lots about useful commands in git that I had never used before, such as `git commit -am` and what pull requests are. I also learned about the importance of a good commit history and consistent work.
 
 ## AWS Notes
 
