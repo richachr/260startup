@@ -2,7 +2,7 @@
 
 [My Notes](notes.md)
 
-A website to help medical professionals schedule appointments more intelligently, allowing emergency appointments to be accommodated by giving consideration to pain, symptoms, and urgency when scheduling appointments, instead of simply using a first-come-first-serve scheduling system and cancellation list.
+A website to help medical professionals schedule appointments more intelligently, allowing emergency appointments to be accommodated by giving consideration to symptoms and urgency when scheduling appointments, instead of simply using a first-come-first-serve scheduling system and cancellation list.
 
 ## 🚀 Specification Deliverable
 
@@ -33,15 +33,15 @@ sequenceDiagram
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
+- Single, secure HTTPS login for patients and healthcare workers.
+- Ability for patients and healthcare workers to view relevant appointments.
 - Describe your key feature
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
+- **HTML** - Webpages for login, scheduling an appointment (for patients), and viewing the schedule (for patients and healthcare workers).
 - **CSS** - Description here
 - **React** - Description here
 - **Service** - Description here
