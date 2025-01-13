@@ -36,17 +36,17 @@ sequenceDiagram
 - Single, secure HTTPS login for patients and healthcare workers.
 - Ability for patients and healthcare workers to view relevant appointments and form information.
 - Appointment scheduling based on weighted factors, giving users an appropriate window for appointments.
-- Suggested diagnosis from public API (Infermedica or ChatGPT) based on provided symptoms.
+- Suggested diagnosis from public API (PubMedGPT) based on provided symptoms.
 - Notifications for patients and healthcare professionals when appointment changes are made.
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Webpages for login, scheduling an appointment (for patients), and viewing the schedule (for patients and healthcare workers).
-- **CSS** - Creating a good looking website with modern design, animations, and responsive design that doesn't look as dreary as most medical websites.
-- **React** - Login and form submission for appointments. 
-- **Service** - Saving and fetching available appointments from database.
+- **HTML** - Webpages for login, submitting information (patients), scheduling an appointment (patients), and viewing/editing the schedule (patients and healthcare workers).
+- **CSS** - Create a good looking website with modern design, animations, and responsive design that doesn't look as dreary as most medical websites.
+- **React** - Login and form submission for appointments. Calculating severity based on weighted factors/information.
+- **Service** - Save and fetch available appointments from database. Query PudMedGPT for severity analysis and possible diagnosis.
 - **DB/Login** - Store and create entries for appointments and login information. Store sensetive medical information securely and authenticate to limit content access.
 - **WebSocket** - Realtime notifications for changes in appointments from the patient or healthcare professional.
 
