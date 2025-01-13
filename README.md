@@ -10,7 +10,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 - [ ] Proper use of Markdown
 - [x] A concise and compelling elevator pitch
-- [ ] Description of key features
+- [x] Description of key features
 - [ ] Description of how you will use each technology
 - [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
@@ -44,11 +44,11 @@ sequenceDiagram
 I am going to use the required technologies in the following ways.
 
 - **HTML** - Webpages for login, scheduling an appointment (for patients), and viewing the schedule (for patients and healthcare workers).
-- **CSS** - Description here
-- **React** - Description here
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **CSS** - Creating a good looking website with modern design, animations, and responsive design that doesn't look as dreary as most medical websites.
+- **React** - Login and form submission for appointments. 
+- **Service** - Saving and fetching available appointments from database.
+- **DB/Login** - Store and create entries for appointments and login information. Store sensetive medical information securely and authenticate to limit content access.
+- **WebSocket** - Realtime notifications for changes in appointments from the patient or healthcare professional.
 
 ## 🚀 AWS deliverable
 
