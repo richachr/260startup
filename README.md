@@ -34,8 +34,10 @@ sequenceDiagram
 ### Key features
 
 - Single, secure HTTPS login for patients and healthcare workers.
-- Ability for patients and healthcare workers to view relevant appointments.
-- Describe your key feature
+- Ability for patients and healthcare workers to view relevant appointments and form information.
+- Appointment scheduling based on weighted factors, giving users an appropriate window for appointments.
+- Suggested diagnosis from public API (Infermedica or ChatGPT) based on provided symptoms.
+- Notifications for patients and healthcare professionals when appointment changes are made.
 
 ### Technologies
 
