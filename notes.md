@@ -10,7 +10,7 @@
 
 ## Specification Notes
 
-I learned lots about useful commands in git that I had never used before, such as `git commit -am` and what pull requests are. I also learned about the importance of a good commit history and consistent work.
+I learned lots about useful commands in git that I had never used before, such as `git commit -am` and what pull requests are. I also learned about the importance of a good commit history and consistent work. I learned about mermaid and sequence diagrams. I also learned how to write things in VIM, like this sentence!
 
 ## AWS Notes
 
