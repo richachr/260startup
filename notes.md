@@ -14,8 +14,14 @@ I learned lots about useful commands in git that I had never used before, such a
 
 ## AWS Notes
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Do more research on Caddy. I learned that architecture diagrams can be made in Google Docs. I learned about DNS records: A (Address), CNAME (Alias), NS (Name Servers, verification). Layers: Application--HTTPS, Transport--TCP,Internet--IP, Link--Fiber, hardware. 
+
+Public IP: 100.29.141.252 ; ssh: ssh -i [key pair file] ubuntu@100.29.141.252 ; You can restart Caddy with sudo service caddy restart ; 
+
+URL: rappt.click
 
 ## HTML Notes
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Special characters: & &amp;, < &lt;, > &gt;, " &quot;, ' &apos;, 😀 &#128512;
+
+Div is a block, span is inline. Heading goes from 1-9. a tags can be called 'anchor'.
