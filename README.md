@@ -57,7 +57,7 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://rappt.click).
 
 ## 🚀 HTML deliverable
 
@@ -67,11 +67,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
 - [ ] **Links** - I did not complete this part of the deliverable.
 - [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
+- [x] **3rd party API placeholder** - I added 'inferred diagnosis' and 'severity' to the appointments, which will come from a call to PubMedGPT.
 - [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **Login placeholder** - The index.html is the login page, and users cannot access their data without logging in.
+- [x] **DB data placeholder** - The tables on the appointment page represent data pulled from the databse.
+- [ ] **WebSocket placeholder** - The notification icon in the header and notifications div are a placeholder for WebSocket notifications.
 
 ## 🚀 CSS deliverable
 
