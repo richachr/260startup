@@ -17,15 +17,19 @@
         <h1>Hello there!</h1>
         <h3>Let's get started with RAPPT.</h3>
         <form action="login.html" method="post">
-            <label for="full-name">Full Name:</label>
-            <input type="text" name="full-name" id="full-name" placeholder="Alex Smith">
-            <label for="dob">Date of Birth:</label>
-            <input type="date" name="dob" id="dob" placeholder="01-01-1970">
             <label for="email">Email:</label>
             <input type="email" name="email" id="email">
             <label for="pw">Password:</label>
             <input type="password" name="pw" id="pw">
-            <a href="appointments.html"><button type="submit"><i class="fa-solid fa-arrow-right"></i></button></a>
+            <a href="appointments.html"><button type="submit" class="loginButton"><i class="fa-solid fa-arrow-right"></i></button></a>
+            <button>Create Account</button>
+            <div class="creationFields">
+                <label for="full-name">Full Name:</label>
+                <input type="text" name="full-name" id="full-name" placeholder="Alex Smith">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" name="dob" id="dob" placeholder="01-01-1970">
+            </div>
+            <a href="appointments.html"><button type="submit">Create</button></a>
         </form>
     </main>
     <footer>
