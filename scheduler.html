@@ -20,14 +20,26 @@
         <h1>Let's talk time.</h1>
         <h3>How do these appointment times sound?</h3>
         <form action="appointments.html" method="post">
-            <select name="apptTime" id="apptTime">
+            <input type="radio" name="apptTime" id="apptTime">
+            <label for="apptTime">
                 <table border="black">
-                    <tr><td><option value="1"><span>Monday, February 10th</span><span>11:55am</span></option></td></tr>
-                    <tr><td><option value="2"><span>Monday, February 10th</span><span>3:25pm</span></option></td></tr>
-                    <button type="button">Show more times for this day</button>
-                    <button type="button">Show the next available day</button>
+                    <tr><td><option value="1"><span>Monday, February 10th</span> <span>11:00am</span></option></td></tr>
                 </table>
-            </select>
+            </label>
+            <input type="radio" name="apptTime" id="apptTime">
+            <label for="apptTime">
+                <table border="black">
+                    <tr><td><option value="2"><span>Monday, February 10th</span> <span>1:45pm</span></option></td></tr>
+                </table>
+            </label>
+            <input type="radio" name="apptTime" id="apptTime">
+            <label for="apptTime">
+                <table border="black">
+                    <tr><td><option value="2"><span>Monday, February 10th</span> <span>3:30pm</span></option></td></tr>
+                </table>
+            </label>
+            <button type="button">Show more times for this day</button>
+            <button type="button">Show the next available day</button>
             <button type="submit" class="scheduleButton"><i class="fa-solid fa-check"></i>Confirm</button>
         </form>
     </main>
