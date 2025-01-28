@@ -63,15 +63,15 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
+- [x] **HTML pages** - 4 pages: login (index), appointments view, appointment creation, and scheduling pages.
+- [x] **Proper HTML element usage** - I used header, footer, and main tags appropriately inside the body element. I chose not to use a `<nav>` element since links between pages were not grouped together.
+- [x] **Links** - The login page contains links to the appointments page, which links to the appointment creation and scheduling pages. All pages have links to login/logout.
+- [x] **Text** - Text is included throughout every page to create a more user-friendly experience. Examples imclude a friendly welcome and an explanation of the website on the homepage, human-readable notifications, and natural language questions on the appointment creation and scheduling pages.
 - [x] **3rd party API placeholder** - I added 'inferred diagnosis' and 'severity' to the appointments, which will come from a call to PubMedGPT.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [x] **Login placeholder** - The index.html is the login page, and users cannot access their data without logging in.
-- [x] **DB data placeholder** - The tables on the appointment page represent data pulled from the databse.
-- [ ] **WebSocket placeholder** - The notification icon in the header and notifications div are a placeholder for WebSocket notifications.
+- [X] **Images** - Used logo image in header and favicon, added placeholder for background image, as well as FontAwesome icons for buttons. Those don't show up well yet because of a lack of CSS. 
+- [x] **Login placeholder** - The index.html is the login page, and users cannot access their data without logging in. Their name is displayed on the header of the appointments page.
+- [x] **DB data placeholder** - The tables on the appointment page and scheduler page represent data pulled from the databse.
+- [x] **WebSocket placeholder** - The notification icon in the header and notifications table are a placeholder for WebSocket notifications.
 
 ## 🚀 CSS deliverable
 
