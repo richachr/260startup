@@ -18,8 +18,8 @@ header {
 }
 
 header > * {
-    padding: 0 1em 0 1em;
-    height:inherit;
+    padding: 1em;
+    height: auto;
     display: flex;
     align-items: center;
 }
@@ -36,6 +36,16 @@ img.logo {
 
 h2.logo {
     color: #545454;
+    font-size: 5vh;
+}
+
+button {
+    border: 3px solid #545454;
+    color: #545454;
+    border-radius: .75em;
+    height: 5vh;
+    width: fit-content;
+    background-color: #ffffff;
 }
 
 main {
