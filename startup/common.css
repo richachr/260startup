@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&display=swap');
 
 * {
     margin: 0;
     font-family: "ABeeZee", sans-serif;
-    
 }
 
 body {
@@ -39,6 +39,12 @@ h2.logo {
     font-size: 5vh;
 }
 
+a.logo {
+    display: inherit;
+    align-items: center;
+    text-decoration: none;
+}
+
 button {
     border: 3px solid #545454;
     color: #545454;
@@ -46,6 +52,7 @@ button {
     height: 5vh;
     width: fit-content;
     background-color: #ffffff;
+    transition: all .15s ease-in-out;
 }
 
 button:hover {
@@ -54,7 +61,7 @@ button:hover {
     cursor: pointer;
 }
 
-button:hover span {
+button:hover span, button:hover i {
     color: #ffffff;
 }
 
@@ -63,10 +70,19 @@ main {
     background: no-repeat center/100% url(background.png);
     box-shadow: inset 0 0px 20px 0 rgb(0,0,0,.5);
     height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .mainContent {
-    
+    width: auto;
+    height: auto;
+    min-height: 60vh;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px #bbbbbb;
+    margin: 10vh 10vw 10vh 10vw;
+    border-radius: 2em;
 }
 
 footer {
@@ -91,6 +107,6 @@ footer a:hover i {
     color: black;
 }
 
-footer i {
-    padding-right: .2em;
+i + span {
+    padding-left: .2em;
 }
