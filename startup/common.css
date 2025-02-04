@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&display=swap');
 
+/* 
+Primary: #ffffff
+Secondary: #545454 
+Accent 1: #A5C3C9
+Accent 2: #E53A47
+*/
+
 * {
     margin: 0;
     font-family: "ABeeZee", sans-serif;
@@ -70,8 +77,28 @@ button {
     transition: all .15s ease-in-out;
 }
 
-button:hover {
+button.primary {
+    background-color: #ffffff;
+    border-color: #A5C3C9;
+}
+
+button.primary * {
+    color: #545454;
+}
+
+button.primary:hover {
+    background-color: #A5C3C9;
+}
+
+button.primary:hover * {
+    color: #545454;
+}
+
+button.secondary:hover {
     background-color: #545454;
+}
+
+button:hover {
     box-shadow: 5px 5px 10px #bbbbbb;
     cursor: pointer;
 }
