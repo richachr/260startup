@@ -31,10 +31,6 @@
     justify-content: flex-end;
 }
 
-.mainRightContent * {
-    margin-bottom: 1.5vh;
-}
-
 .mainRightContent nav * {
     width: 100%;
 }
