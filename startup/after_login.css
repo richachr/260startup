@@ -18,3 +18,11 @@ header nav > * {
     margin-bottom: 4vh;
 }
 
+.additionalApptInfo {
+    display: none;
+}
+
+img {
+    width: 100%;
+}
+
