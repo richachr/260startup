@@ -36,6 +36,10 @@ img {
     padding: 0 1vw;
 }
 
+.mainContent nav button {
+    width: 10vw;
+}
+
 .appointments {
     margin: 5vh 0 0 0;
     width: 85%;
@@ -54,4 +58,8 @@ img {
     border-radius: 10px;
     margin-bottom: 7vh;
     background-color: #ffffff;
+}
+
+.formItem * {
+    margin-bottom: 2vh;
 }
