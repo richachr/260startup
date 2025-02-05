@@ -215,3 +215,31 @@ footer a:hover i {
 i + span {
     padding-left: .2em;
 }
+
+@media (aspect-ratio < 1) {
+
+    * {
+        text-align: center;
+    }
+
+    header {
+        height: auto;
+        flex-direction: column;
+    }
+
+    .leftContent {
+        justify-content: center;
+    }
+    
+
+    button {
+        height: auto;
+        width: fit-content;
+        padding: 1vh 2vw;
+    }
+
+    button span {
+        padding-top: 1vh;
+        padding-bottom: 1vh;
+    }
+}
