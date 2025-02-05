@@ -42,7 +42,6 @@ img {
 }
 
 .appointments {
-    margin: 5vh 0 0 0;
     width: 85%;
     display: flex;
     flex-direction: column;
@@ -57,7 +56,7 @@ img {
     padding: 5vh 2vw;
     box-shadow: inset 0 0 5px #dddddd;
     border-radius: 10px;
-    margin-bottom: 7vh;
+    margin-top: 5vh;
     background-color: #ffffff;
 }
 
@@ -92,6 +91,32 @@ fieldset .formItem label {
 }
 
 fieldset .formItem label input {
-    margin: 0 1vw 0 0;
+    margin: 0 2vw 0 0;
     overflow: hidden;
+}
+
+@media (aspect-ratio < 1) {
+    .actions {
+        height: auto;
+    }
+
+    .mainContent nav button {
+        width: auto;
+    }
+
+    .actions button {
+        padding: .5rem;
+    }
+
+    .appointment {
+        flex-direction: column;
+    }
+
+    .appointment > span {
+        margin-bottom: 2vh;
+    }
+
+    fieldset .formItem {
+        margin-bottom: 2vh;
+    }
 }
