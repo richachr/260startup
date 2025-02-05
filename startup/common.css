@@ -177,7 +177,7 @@ form * {
     font-size: 3vh;
 }
 
-input {
+input, select {
     box-sizing: border-box;
     padding: .5rem .75rem;
     border-radius: 1rem;
@@ -186,12 +186,8 @@ input {
     overflow: scroll;
 }
 
-.formItem label {
+.formItem label, label {
     font-size: 4vh;
-}
-
-input:focus {
-    
 }
 
 footer {
