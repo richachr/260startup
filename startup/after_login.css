@@ -34,6 +34,7 @@ img {
 
 .actions button {
     padding: 0 1vw;
+    width: fit-content;
 }
 
 .mainContent nav button {
@@ -62,4 +63,35 @@ img {
 
 .formItem * {
     margin-bottom: 2vh;
+}
+
+form .actions {
+    width: 100%;
+}
+
+fieldset.fieldset {
+    width: 80%;
+    border-radius: 10px;
+    border: none;
+    box-shadow: inset 0 0 5px #cccccc;
+    padding: 2vh 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+}
+
+fieldset .formItem {
+    width: 85%;
+    margin: 0;
+}
+
+fieldset .formItem label {
+    margin: 0;
+}
+
+fieldset .formItem label input {
+    margin: 0 1vw 0 0;
+    overflow: hidden;
 }
