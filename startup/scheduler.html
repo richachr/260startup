@@ -35,33 +35,25 @@
             <img src="papers.png" alt="Person doing paperwork">
             <h1>Let's talk time.</h1>
             <h3>How do these appointment times sound?</h3>
-            <form action="" method="post">
-                <input type="radio" name="apptTime" id="apptTime">
-                <label for="apptTime">
-                    <table border="black">
-                        <tr><td><option value="1"><span>Monday, February 10th</span> <span>11:00am</span></option></td></tr>
-                    </table>
-                </label>
-                <input type="radio" name="apptTime" id="apptTime">
-                <label for="apptTime">
-                    <table border="black">
-                        <tr><td><option value="2"><span>Monday, February 10th</span> <span>1:45pm</span></option></td></tr>
-                    </table>
-                </label>
-                <input type="radio" name="apptTime" id="apptTime">
-                <label for="apptTime">
-                    <table border="black">
-                        <tr><td><option value="2"><span>Monday, February 10th</span> <span>3:30pm</span></option></td></tr>
-                    </table>
-                </label>
-                <button type="button">Show more times for this day</button>
-                <button type="button">Show the next available day</button>
+            <fieldset class="fieldset">
+                <div class="formItem">
+                    <label for="1"><input type="radio" name="apptTime" id="1" value="1" />Monday, February 10th 11:00am</label>
+                </div>
+                <div class="formItem">
+                    <label for="2"><input type="radio" name="apptTime" id="2" value="2" />Monday, February 10th 1:45pm</label>
+                </div>
+                <div class="formItem">
+                    <label for="3"><input type="radio" name="apptTime" id="3" value="3" />Monday, February 10th 3:30pm</label>
+                </div>
+            </fieldset>
+                <div class="actions">
+                    <button type="button" class="secondary"><span>Show more times for this day</span></button>
+                    <button type="button" class="secondary"><span>Show the next available day</span></button>
+                </div>
             </form>
-            <a href="create.html"><button type="button">Back</button></a>
-            <a href="appointments.html"><button type="button" class="scheduleButton"><i class="fa-solid fa-check"></i>Confirm</button></a>
             <nav>
-                <a href="appointments.html"><button type="button" class="danger"><span>Back</span></button></a>
-                <a href="scheduler.html"><button type="button" class="primary"><i class="fa-solid fa-arrow-right"></i></button></a>
+                <a href="create.html"><button type="button" class="danger"><span>Back</span></button></a>
+                <a href="appointments.html"><button type="button" class="primary"><i class="fa-solid fa-arrow-right"></i></button></a>
             </nav>
         </div>
     </main>
