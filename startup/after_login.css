@@ -1,0 +1,12 @@
+aside.notifications {
+    display: none;
+}
+
+* {
+    color: #545454;
+}
+
+.mainContent {
+    flex-direction: column;
+}
+
