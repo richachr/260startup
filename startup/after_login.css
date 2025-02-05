@@ -6,7 +6,15 @@ aside.notifications {
     color: #545454;
 }
 
+header nav > * {
+    margin: 0 2vw 0 0;
+}
+
 .mainContent {
     flex-direction: column;
+}
+
+.mainContent > * {
+    margin-bottom: 4vh;
 }
 
