@@ -23,6 +23,16 @@ header nav > * {
 }
 
 img {
-    width: 100%;
+    width: 75%;
+}
+
+.actions {
+    width: 75%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.actions button {
+    padding: 0 1vw;
 }
 
