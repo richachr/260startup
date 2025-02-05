@@ -4,33 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RAPPT - My Appointments</title>
-    <link rel="icon" href="RapptLogo.png">
-    <script src="https://kit.fontawesome.com/21b0b0dd3f.js" crossorigin="anonymous"></script>
+    <link rel="icon" href="RapptLogo.ico">
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="after_login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
     <header>
-        <img src="RapptLogo.png" alt="Logo"><h2>Rappt</h2>
-        <h5>BYU Student Health Services</h5>
-        <button><i class="fa-regular fa-bell"></i></button>
-        <aside>
-            <h5>Notifications</h5>
-            <table>
-                <tr><td><span>Dr. Smithfield</span> <span>scheduled</span> an appointment for <span>James Haskell</span> on <span>February 25th, 2025</span>.</td></tr>
-                <tr><td><span>Dr. Jenkins</span> <span>cancelled</span> an appointment for <span>Emily Haskell</span> on <span>March 14th, 2025</span>.</td></tr>
-            </table>
-        </aside>
+        <div class="leftContent">
+            <a href="index.html" class="logo"><img src="RapptLogo.png" alt="Logo" class="logo"><h2 class="logo">Rappt</h2></a>
+        </div>
+        <div class="rightContent">
+            <nav>
+                <button class="secondary"><i class="fa-regular fa-bell"></i>
+                    <aside class="notifications">
+                        <h5>Notifications</h5>
+                        <table>
+                            <tr><td><span>Dr. Smithfield</span> <span>scheduled</span> an appointment for <span>James Haskell</span> on <span>February 25th, 2025</span>.</td></tr>
+                            <tr><td><span>Dr. Jenkins</span> <span>cancelled</span> an appointment for <span>Emily Haskell</span> on <span>March 14th, 2025</span>.</td></tr>
+                        </table>
+                    </aside>
+                </button>
+            </nav>
+        </div>
+        <a href='index.html'><button class="danger"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></a>
         <h5>Hey there, James!</h5>
-        <a href='index.html'><button><i class="fa-solid fa-arrow-right-from-bracket"></i></button></a>
-        <hr>
     </header>
     <main>
-        <img src="background.png" alt="background" width="50%">
-        <h1>Your Appointments</h1>
+        <div class="mainContent">
+            <h1>Your Appointments</h1>
         <div class="actions">
             <a href="create.html"><button><i class="fa-regular fa-calendar-plus"></i><span>New</span></button></a>
             <button><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Export</span></button>
         </div>
-        <table border="black">
+        <table>
             <tr><td>
                 <span>Andrew Smithfield</span>
                 <span>3:00pm, February 5th, 2025</span>
@@ -82,11 +89,10 @@
                 </div>
             </td></tr>
         </table>
+        </div>
     </main>
     <footer>
-        <hr>
         <h4>Christian Richardson</h4>
-        <br>
         <a href="https://github.com/richachr/260startup">GitHub</a>
     </footer>
 </body>
