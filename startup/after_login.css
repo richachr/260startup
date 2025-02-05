@@ -1,0 +1,122 @@
+aside.notifications {
+    display: none;
+}
+
+* {
+    color: #545454;
+}
+
+header nav > * {
+    margin: 0 2vw 0 0;
+}
+
+.mainContent {
+    flex-direction: column;
+}
+
+.mainContent > * {
+    margin-bottom: 4vh;
+}
+
+.additionalApptInfo {
+    display: none;
+}
+
+img {
+    width: 75%;
+}
+
+.actions {
+    width: 75%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.actions button {
+    padding: 0 1vw;
+    width: fit-content;
+}
+
+.mainContent nav button {
+    width: 10vw;
+}
+
+.appointments {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.appointment {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 5vh 2vw;
+    box-shadow: inset 0 0 5px #dddddd;
+    border-radius: 10px;
+    margin-top: 5vh;
+    background-color: #ffffff;
+}
+
+.formItem * {
+    margin-bottom: 2vh;
+}
+
+form .actions {
+    width: 100%;
+}
+
+fieldset.fieldset {
+    width: 80%;
+    border-radius: 10px;
+    border: none;
+    box-shadow: inset 0 0 5px #cccccc;
+    padding: 2vh 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+}
+
+fieldset .formItem {
+    width: 85%;
+    margin: 0;
+}
+
+fieldset .formItem label {
+    margin: 0;
+}
+
+fieldset .formItem label input {
+    margin: 0 2vw 0 0;
+    overflow: hidden;
+}
+
+@media (aspect-ratio < 1) {
+    .actions {
+        height: auto;
+    }
+
+    .mainContent nav button {
+        width: auto;
+    }
+
+    .actions button {
+        padding: .5rem;
+    }
+
+    .appointment {
+        flex-direction: column;
+    }
+
+    .appointment > span {
+        margin-bottom: 2vh;
+    }
+
+    fieldset .formItem {
+        margin-bottom: 2vh;
+    }
+}

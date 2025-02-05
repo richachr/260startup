@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rappt: Login</title>
-    <link rel="icon" href="RapptLogo.png">
+    <title>Rappt - Create Account</title>
+    <link rel="icon" href="RapptLogo.ico">
     <link rel="stylesheet" href="common.css">
-    <script src="https://kit.fontawesome.com/21b0b0dd3f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="temp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"> 
+
 </head>
 <body>
     <header>
@@ -28,11 +31,17 @@
                 <h3>Let's get started with RAPPT.</h3>
             </div>
             <div class="mainRightContent">
-                <p>RAPPT is a smart appointment scheduler which will help you find appointments at times that work for you, and make sure you're not stuck waiting for months for an urgent appointment.</p>
-                <nav>
-                    <a href="tempLogin.html"><button type="button" class="primary"><span>Login</span></button></a>
-                    <a href="tempCreate.html"><button type="button" class="secondary"><span>Create Account</span></button></a>
-                </nav>
+                <form action="appointments.html" method="post">
+                    <div class="formItem">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" id="email" placeholder="jane@example.net">
+                    </div>
+                    <div class="formItem">
+                        <label for="pw">Password:</label>
+                        <input type="password" name="pw" id="pw">
+                    </div>
+                    <a href="appointments.html"><button type="button" class="secondary"><i class="fa-solid fa-arrow-right"></i></button></a>
+                </form>
             </div>
         </div>
     </main>
@@ -40,6 +49,5 @@
         <h4>Created by Christian Richardson</h4>
         <a href="https://github.com/richachr/260startup"><i class="fa-brands fa-github"></i><span>GitHub</span></a>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

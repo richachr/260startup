@@ -77,12 +77,14 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Header, footer, and main content body** - I did not complete this part of the deliverable.
-- [ ] **Navigation elements** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing** - I did not complete this part of the deliverable.
-- [ ] **Application elements** - I did not complete this part of the deliverable.
-- [ ] **Application text content** - I did not complete this part of the deliverable.
-- [ ] **Application images** - I did not complete this part of the deliverable.
+***IF IT FLICKERS IN AND OUT, IT'S A DEVTOOLS GLITCH. Prof. Jensen looked at it and he was puzzled too, but I think it's working now.***
+
+- [x] **Header, footer, and main content body** - All styled appropriately and consistent for each page.
+- [x] **Navigation elements** - I used nav elements styled with flexbox to organize and evenly space the buttons to navigate around the page.
+- [x] **Responsive to window resizing** - I used media queries to resize and reorganize the website to look good on all sample devices in the DevTools.
+- [x] **Application elements** - I used a consistent window-on-background design and a consistent color palette across the main application elements.
+- [x] **Application text content** - I used consistent styling and fonts across h# and p elements, and made sure to the best of my ability that no text is cut off.
+- [X] **Application images** - I used and resized background images, design elements, and the logo image to improve the look of my page.
 
 ## 🚀 React part 1: Routing deliverable
 
