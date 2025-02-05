@@ -7,18 +7,15 @@ Accent 1: #A5C3C9
 Accent 2: #E53A47
 */
 
-html {
+html, body {
     width: 100%;
     height: 100%;
+    margin: 0;
 }
 
  * {
     margin: 0;
     font-family: "ABeeZee", sans-serif;
-}
-
-body {
-    margin: 0;
 }
 
 header {
@@ -96,8 +93,21 @@ button.primary:hover {
     background-color: #A5C3C9;
 }
 
-button.primary:hover * {
+button.danger {
+    background-color: #ffffff;
+    border-color: #E53A47;
+}
+
+button.danger * {
     color: #545454;
+}
+
+button.danger:hover {
+    background-color: #E53A47;
+}
+
+button.danger:hover * {
+    color: #ffffff;
 }
 
 button.secondary:hover {
@@ -134,11 +144,54 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: min(10vh,10vw);
+    padding: 10vh 5vw;
 }
 
 .mainContent > * {
     min-height: 100%;
+}
+
+form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+form * {
+    width: 100%;
+}
+
+.formItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    margin-bottom: 5vh;
+}
+
+.formItem * {
+    margin-bottom: 1vh;
+    font-size: 3vh;
+}
+
+input {
+    box-sizing: border-box;
+    padding: .5rem .75rem;
+    border-radius: 1rem;
+    color: #545454;
+    border: 2px solid #545454;
+    overflow: scroll;
+}
+
+.formItem label {
+    font-size: 4vh;
+}
+
+input:focus {
+    
 }
 
 footer {
