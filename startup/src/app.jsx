@@ -6,14 +6,14 @@ export default function App() {
     return (
         <div className="body">
             <Routes>
-                <Route element={<UnauthenticatedHeader />}>
+                <Route element={<PreAuthHeader />}>
                     <Route path='/' element={<Homepage />} exact>
                         <Route index element={<Welcome />} />
                         <Route path='/login' element={<Login />} />
                         <Route path='/create-account' element={<CreateAccount />} />
                     </Route>
                 </Route>
-                <Route element={<AuthenticatedHeader />}>
+                <Route element={<PostAuthHeader />}>
                     <Route path='/appointments' element={<Appointments />} />
                     <Route path='/create-appointment' element={<CreateAppointment />} />
                     <Route path='/scheduler' element={<Scheduler />} />
