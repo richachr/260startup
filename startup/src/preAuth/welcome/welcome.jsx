@@ -28,3 +28,33 @@ export function Login() {
         </div>
     )
 }
+
+export function CreateAccount() {
+    return (
+        <div className="mainRightContent">
+            <form action="">
+                <div className="formItem">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" placeholder="jane@example.net" />
+                </div>
+                <div className="formItem">
+                    <label for="pw">Password:</label>
+                    <input type="password" name="pw" id="pw" />
+                </div>
+                <div className="formItem">
+                    <label for="confirmPw">Confirm Password:</label>
+                    <input type="password" name="confirmPw" id="confirmPw" />
+                </div>
+                <div className="formItem">
+                    <label for="full-name">Full Name:</label>
+                    <input type="text" name="full-name" id="full-name" placeholder="Alex Smith" />
+                </div>
+                <div className="formItem">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" name="dob" id="dob" placeholder="01-01-1970" />
+                </div> 
+                <NavLink to="appointments"><button type="submit" className="primary"><span>Create</span></button></NavLink>
+            </form>
+        </div>
+    )
+}
