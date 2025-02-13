@@ -17,9 +17,7 @@ export default function PreAuthHeader() {
                 </div>
             </header>
             <main>
-                <div className="mainContent">
-                    <Outlet/>
-                </div>
+                <Outlet />
             </main>
         </div>
     )
