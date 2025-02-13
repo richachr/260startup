@@ -11,6 +11,18 @@ export function Homepage() {
     )
 }
 
+export function Welcome() {
+    return (
+    <div className="mainRightContent">
+        <p>RAPPT is a smart appointment scheduler which will help you find appointments at times that work for you, and make sure you're not stuck waiting for months for an urgent appointment.</p>
+        <nav>
+            <NavLink to="login"><button type="button" class="primary"><span>Login</span></button></NavLink>
+            <NavLink to="create-account"><button type="button" class="secondary"><span>Create Account</span></button></NavLink>
+        </nav>
+    </div>
+    )
+}
+
 export function Login() {
     return (
         <div className="mainRightContent">
