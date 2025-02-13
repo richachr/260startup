@@ -14,8 +14,8 @@ export default function App() {
                         <Route index element={<Welcome />} />
                         <Route path='/login' element={<Login />} />
                         <Route path='/create-account' element={<CreateAccount />} />
-                        <Route path='/not-found' element={<NotFound />} />
                     </Route>
+                    <Route path='/not-found' element={<NotFound />} />
                 </Route>
                 <Route element={<PostAuthHeader />}>
                     <Route path='/appointments' element={<Appointments />} />
@@ -35,4 +35,10 @@ export default function App() {
 function ToNotFound() {
     const navigate = useNavigate();
     navigate('/not-found')
+}
+
+function NotFound() {
+    return (
+        <div className="mainContent"><h1>Oops! We can't find this page... Error 404.</h1></div>
+    )
 }
