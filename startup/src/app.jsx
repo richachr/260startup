@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './app.css';
-import {Routes, Route} from 'react-router-dom';
+import {Routes, Route, useNavigate} from 'react-router-dom';
 
 import PreAuthHeader from './preAuth/PreAuthHeader';
 import {Homepage, Welcome, Login, CreateAccount} from './preAuth/welcome/welcome'
@@ -34,11 +34,11 @@ export default function App() {
 
 function ToNotFound() {
     const navigate = useNavigate();
-    navigate('/not-found')
+    useEffect(() => {navigate('/not-found');}, [navigate]);
 }
 
 function NotFound() {
     return (
-        <div className="mainContent"><h1>Oops! We can't find this page... Error 404.</h1></div>
+        <div className="mainContent"><h1 style={{fontSize: '2em'}}>Oops! We can't find this page... Error 404.</h1><img style={{width: '200px'}} src="./confused-404.png" alt="Confused person looking at phone." /></div>
     )
 }
