@@ -17,11 +17,11 @@ export default function App() {
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                <Route element={<PostAuthHeader />}>
+                {/* <Route element={<PostAuthHeader />}>
                     <Route path='/appointments' element={<Appointments />} />
                     <Route path='/create-appointment' element={<CreateAppointment />} />
                     <Route path='/scheduler' element={<Scheduler />} />
-                </Route>
+                </Route> */}
                 <Route path='*' element={<ToNotFound />} />
             </Routes>
             <footer>
