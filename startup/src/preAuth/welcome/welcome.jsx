@@ -19,8 +19,8 @@ export function Welcome() {
     <div className="mainRightContent">
         <p>RAPPT is a smart appointment scheduler which will help you find appointments at times that work for you, and make sure you're not stuck waiting for months for an urgent appointment.</p>
         <nav>
-            <NavLink to="login"><button type="button" class="primary"><span>Login</span></button></NavLink>
-            <NavLink to="create-account"><button type="button" class="secondary"><span>Create Account</span></button></NavLink>
+            <NavLink to="login"><button type="button" className="primary"><span>Login</span></button></NavLink>
+            <NavLink to="create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
         </nav>
     </div>
     )
