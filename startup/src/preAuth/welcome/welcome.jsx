@@ -11,3 +11,20 @@ export function Homepage() {
     )
 }
 
+export function Login() {
+    return (
+        <div className="mainRightContent">
+            <form action="" method="post">
+                <div className="formItem">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" placeholder="jane@example.net" />
+                </div>
+                <div className="formItem">
+                    <label for="pw">Password:</label>
+                    <input type="password" name="pw" id="pw" />
+                </div>
+                <NavLink to="appointments"><button type="button" className="secondary"><i className="fa-solid fa-arrow-right"></i></button></NavLink>
+            </form>
+        </div>
+    )
+}
