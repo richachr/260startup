@@ -1,5 +1,7 @@
 import React from "react";
 import {NavLink, Outlet} from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 
 export function Homepage() {
     return (
@@ -38,7 +40,7 @@ export function Login() {
                     <label for="pw">Password:</label>
                     <input type="password" name="pw" id="pw" />
                 </div>
-                <NavLink to="appointments"><button type="button" className="secondary"><i className="fa-solid fa-arrow-right"></i></button></NavLink>
+                <NavLink to="appointments"><button type="button" className="secondary"><FontAwesomeIcon icon={faArrowRight} className='fontAwesome' /></button></NavLink>
             </form>
         </div>
     )
