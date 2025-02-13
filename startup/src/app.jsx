@@ -41,6 +41,6 @@ function ToNotFound() {
 
 function NotFound() {
     return (
-        <div className="mainContent"><h1 style={{fontSize: '2em'}}>Oops! We can't find this page... Error 404.</h1><img style={{width: '200px'}} src="./confused-404.png" alt="Confused person looking at phone." /></div>
+        <div className="mainContent" style={{justifyContent: 'space-evenly'}}><h1 style={{fontSize: '2em'}}>Oops! We can't find this page... Error 404.</h1><img style={{width: '200px'}} src="./confused-404.png" alt="Confused person looking at phone." /></div>
     )
 }
