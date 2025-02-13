@@ -1,36 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAPPT - Schedule Appointment</title>
-    <link rel="icon" href="RapptLogo.ico">
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="after_login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-</head>
-<body>
-    <header>
-        <div class="leftContent">
-            <a href="index.html" class="logo"><img src="RapptLogo.png" alt="Logo" class="logo"><h2 class="logo">Rappt</h2></a>
-        </div>
-        <div class="rightContent">
-            <nav>
-                <button class="secondary"><i class="fa-regular fa-bell"></i>
-                    <aside class="notifications">
-                        <h5>Notifications</h5>
-                        <table>
-                            <tr><td><span>Dr. Smithfield</span> <span>scheduled</span> an appointment for <span>James Haskell</span> on <span>February 25th, 2025</span>.</td></tr>
-                            <tr><td><span>Dr. Jenkins</span> <span>cancelled</span> an appointment for <span>Emily Haskell</span> on <span>March 14th, 2025</span>.</td></tr>
-                        </table>
-                    </aside>
-                </button>
-                <a href='index.html'><button class="danger"><i class="fa-solid fa-arrow-right-from-bracket"></i></button></a>
-            </nav>
-            <h5 style="text-wrap: none;">James Haskell</h5>
-        </div>
-    </header>
-    <main>
+import React from "react";
+import { NavLink } from "react-router-dom";
+
+export function Scheduler() {
+    return (
         <div class="mainContent">
             <img src="papers.png" alt="Person doing paperwork">
             <h1>Let's talk time.</h1>
@@ -56,10 +28,6 @@
                 <a href="appointments.html"><button type="button" class="primary"><i class="fa-solid fa-arrow-right"></i></button></a>
             </nav>
         </div>
-    </main>
-    <footer>
-        <h4>Created by Christian Richardson</h4>
-        <a href="https://github.com/richachr/260startup"><i class="fa-brands fa-github"></i><span>GitHub</span></a>
-    </footer>
-</body>
-</html>
+    )
+}
+        
