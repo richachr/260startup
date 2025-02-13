@@ -1,6 +1,9 @@
 import React from 'react';
 import './app.css';
-import {Routes, Route, NavLink, Navigate} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
+
+import PreAuthHeader from './preAuth/PreAuthHeader';
+import {Homepage, Welcome, Login, CreateAccount} from './preAuth/welcome/welcome'
 
 export default function App() {
     return (
