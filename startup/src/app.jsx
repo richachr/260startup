@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import './app.css';
 import {Routes, Route, useNavigate} from 'react-router-dom';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faGithub} from '@fortawesome/free-brands-svg-icons'
 
 import PreAuthHeader from './preAuth/PreAuthHeader';
 import {Homepage, Welcome, Login, CreateAccount} from './preAuth/welcome/welcome'
@@ -26,7 +28,7 @@ export default function App() {
             </Routes>
             <footer>
                 <h4>Created by Christian Richardson</h4>
-                <a href="https://github.com/richachr/260startup"><i className="fa-brands fa-github"></i><span>GitHub</span></a>
+                <a href="https://github.com/richachr/260startup"><FontAwesomeIcon icon={faGithub} className='fontAwesome' /><span>GitHub</span></a>
             </footer>
         </div>
     )
