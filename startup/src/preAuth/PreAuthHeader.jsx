@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, Outlet} from 'react-router-dom';
 import './welcome/welcome.css';
 
 export default function PreAuthHeader() {
