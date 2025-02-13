@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-import './welcome/index.css';
+import './welcome/welcome.css';
 
 export default function PreAuthHeader() {
     return (
