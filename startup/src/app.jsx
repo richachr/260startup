@@ -2,10 +2,14 @@ import React, { useEffect } from 'react';
 import './app.css';
 import {Routes, Route, useNavigate} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faGithub} from '@fortawesome/free-brands-svg-icons'
+import {faGithub} from '@fortawesome/free-brands-svg-icons';
 
 import PreAuthHeader from './preAuth/PreAuthHeader';
-import {Homepage, Welcome, Login, CreateAccount} from './preAuth/welcome/welcome'
+import {Homepage, Welcome, Login, CreateAccount} from './preAuth/welcome/welcome';
+import PostAuthHeader from './postAuth/PostAuthHeader';
+import { Appointments } from './postAuth/appointments/appointments';
+import { CreateAppointment } from './postAuth/create/create';
+import { Scheduler } from './postAuth/scheduler/scheduler';
 
 export default function App() {
     return (
@@ -19,11 +23,11 @@ export default function App() {
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                {/* <Route element={<PostAuthHeader />}>
+                <Route element={<PostAuthHeader />}>
                     <Route path='/appointments' element={<Appointments />} />
                     <Route path='/create-appointment' element={<CreateAppointment />} />
                     <Route path='/scheduler' element={<Scheduler />} />
-                </Route> */}
+                </Route>
                 <Route path='*' element={<ToNotFound />} />
             </Routes>
             <footer>
