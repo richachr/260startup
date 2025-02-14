@@ -93,6 +93,10 @@ button.primary:hover {
     background-color: #A5C3C9;
 }
 
+button.primary:hover * {
+    color: #ffffff;
+}
+
 button.danger {
     background-color: #ffffff;
     border-color: #E53A47;
@@ -112,6 +116,10 @@ button.danger:hover * {
 
 button.secondary:hover {
     background-color: #545454;
+}
+
+button.secondary:hover * {
+    color: #ffffff;
 }
 
 button:hover {
