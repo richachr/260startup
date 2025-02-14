@@ -5,7 +5,7 @@ import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 
 export function Homepage() {
     return (
-        <div className="mainContent">
+        <div className="mainContent" id="preAuth">
             <div className="mainLeftContent">
                 <img src="doc-patient.png" alt="Doctor Image" />
                 <h1>Hello there!</h1>
@@ -21,8 +21,8 @@ export function Welcome() {
     <div className="mainRightContent">
         <p>RAPPT is a smart appointment scheduler which will help you find appointments at times that work for you, and make sure you're not stuck waiting for months for an urgent appointment.</p>
         <nav>
-            <NavLink to="login"><button type="button" className="primary"><span>Login</span></button></NavLink>
-            <NavLink to="create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
+            <NavLink to="/login"><button type="button" className="primary"><span>Login</span></button></NavLink>
+            <NavLink to="/create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
         </nav>
     </div>
     )
@@ -40,7 +40,7 @@ export function Login() {
                     <label for="pw">Password:</label>
                     <input type="password" name="pw" id="pw" />
                 </div>
-                <NavLink to="appointments"><button type="button" className="secondary"><FontAwesomeIcon icon={faArrowRight} className='fontAwesome' /></button></NavLink>
+                <NavLink to="/appointments"><button type="button" className="secondary"><FontAwesomeIcon icon={faArrowRight} className='fontAwesome' /></button></NavLink>
             </form>
         </div>
     )
@@ -70,7 +70,7 @@ export function CreateAccount() {
                     <label for="dob">Date of Birth:</label>
                     <input type="date" name="dob" id="dob" placeholder="01-01-1970" />
                 </div> 
-                <NavLink to="appointments"><button type="submit" className="primary"><span>Create</span></button></NavLink>
+                <NavLink to="/appointments"><button type="submit" className="primary"><span>Create</span></button></NavLink>
             </form>
         </div>
     )
