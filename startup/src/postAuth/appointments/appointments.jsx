@@ -1,17 +1,17 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarPlus, faArrowUpRightFromSquare, faFile } from "@fortawesome/free-solid-svg-icons";
-import { faFileLines, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarPlus, faFileLines, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
 
 export function Appointments() {
     return (
-        <div className="mainContent">
-            <img src="docs-together.png" alt="Doctors" />
+        <div className="mainContent" id="postAuth">
+            <img id="postAuth" src="docs-together.png" alt="Doctors" />
             <h1>Your Appointments</h1>
             <div className="actions">
-                <a href="create.html"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></a>
+                <NavLink to="/create-appointment"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></NavLink>
                 <button className="secondary"><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
             </div>
             <div className="appointments">
@@ -35,8 +35,8 @@ export function Appointments() {
                         <p>Scheduling Class: 3</p>
                     </div>
                     <div className="apptActions">
-                        <button className="secondary" onclick="showInfo()"><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                        <button className="primary" onclick="editAppt()"><FontAwesomeIcon icon={faPenToSquare} className="fontAwesome" /></button>
+                        <button className="secondary" onClick="showInfo()"><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
+                        <button className="primary" onClick="editAppt()"><FontAwesomeIcon icon={faPenToSquare} className="fontAwesome" /></button>
                     </div>
                 </div>
                 <div className="appointment">
@@ -61,8 +61,8 @@ export function Appointments() {
                         </div>
                     </div>
                     <div className="apptActions">
-                        <button className="secondary" onclick="showInfo()"><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                        <button className="primary" onclick="editAppt()"><FontAwesomeIcon icon={faPenToSquare} className="fontAwesome" /></button>
+                        <button className="secondary" onClick="showInfo()"><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
+                        <button className="primary" onClick="editAppt()"><FontAwesomeIcon icon={faPenToSquare} className="fontAwesome" /></button>
                     </div>
                 </div>
             </div>
