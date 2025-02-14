@@ -6,15 +6,15 @@ aside.notifications {
     color: #545454;
 }
 
-header nav > * {
+header#postAuth nav > * {
     margin: 0 2vw 0 0;
 }
 
-.mainContent {
+#postAuth.mainContent {
     flex-direction: column;
 }
 
-.mainContent > * {
+#postAuth.mainContent > * {
     margin-bottom: 4vh;
 }
 
@@ -22,13 +22,14 @@ header nav > * {
     display: none;
 }
 
-img {
+img#postAuth {
     width: 75%;
 }
 
 .actions {
     width: 75%;
     display: flex;
+    flex-direction: row;
     justify-content: space-evenly;
 }
 
@@ -37,7 +38,7 @@ img {
     width: fit-content;
 }
 
-.mainContent nav button {
+#postAuth.mainContent nav button {
     width: 10vw;
 }
 
@@ -60,7 +61,7 @@ img {
     background-color: #ffffff;
 }
 
-.formItem * {
+#postAuth.formItem * {
     margin-bottom: 2vh;
 }
 
@@ -100,7 +101,7 @@ fieldset .formItem label input {
         height: auto;
     }
 
-    .mainContent nav button {
+    #postAuth.mainContent nav button {
         width: auto;
     }
 
