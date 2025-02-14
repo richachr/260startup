@@ -6,8 +6,8 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 export function Scheduler() {
     const navigate = useNavigate();
     return (
-        <div class="mainContent">
-            <img src="papers.png" alt="Person doing paperwork" />
+        <div class="mainContent" id="postAuth">
+            <img id="postAuth" src="papers.png" alt="Person doing paperwork" />
             <h1>Let's talk time.</h1>
             <h3>How do these appointment times sound?</h3>
             <fieldset class="fieldset">
@@ -27,7 +27,7 @@ export function Scheduler() {
             </div>
             <nav>
                 <button onClick={()=>navigate(-1)} type="button" class="danger"><span>Back</span></button>
-                <NavLink to="appointments"><button type="button" class="primary"><FontAwesomeIcon icon={faArrowRight} className="fontAwesome" /></button></NavLink>
+                <NavLink to="/appointments"><button type="button" class="primary"><FontAwesomeIcon icon={faArrowRight} className="fontAwesome" /></button></NavLink>
             </nav>
         </div>
     )
