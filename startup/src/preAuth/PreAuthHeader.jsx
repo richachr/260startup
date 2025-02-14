@@ -11,8 +11,8 @@ export default function PreAuthHeader() {
                 </div>
                 <div className="rightContent">
                     <nav>
-                        <NavLink to="login"><button type="button" className="primary"><span>Login</span></button></NavLink>
-                        <NavLink to="create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
+                        <NavLink to="/login"><button type="button" className="primary"><span>Login</span></button></NavLink>
+                        <NavLink to="/create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
                     </nav>
                 </div>
             </header>
