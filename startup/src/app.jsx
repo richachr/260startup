@@ -12,6 +12,10 @@ import { CreateAppointment } from './postAuth/create/create';
 import { Scheduler } from './postAuth/scheduler/scheduler';
 
 export default function App() {
+    const [firstName, setFirstName] = React.useState(localStorage.getItem(name).split(" ")[0] || undefined);
+    const currentLoginState = firstname ? true : false;
+    const [loginState, setLoginState] = React.useState(currentLoginState);
+
     return (
         <div className="body">
             <Routes>
@@ -23,7 +27,7 @@ export default function App() {
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                <Route element={<PostAuthHeader />}>
+                <Route element={<PostAuthHeader name={firstName}/>}>
                     <Route path='/appointments' element={<Appointments />} />
                     <Route path='/create-appointment' element={<CreateAppointment />} />
                     <Route path='/scheduler' element={<Scheduler />} />
@@ -48,3 +52,13 @@ function NotFound() {
         <div className="mainContent" style={{justifyContent: 'space-evenly'}}><h1 style={{fontSize: '2em'}}>Oops! We can't find this page... Error 404.</h1><img style={{width: '200px'}} src="./confused-404.png" alt="Confused person looking at phone." /></div>
     )
 }
+
+// TODO: Login/Logout
+// TODO: Account Creation/Storage
+// TODO: Authentication lock on postAuth
+// TODO: View more info for appt
+// TODO: Edit appointment - populate fields in create page
+// TODO: Notifications
+// TODO: Appointment creation
+// TODO: Scheduler logic
+// TODO: Error messages?
