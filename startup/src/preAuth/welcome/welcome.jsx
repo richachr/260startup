@@ -1,5 +1,5 @@
 import React from "react";
-import {NavLink, Outlet} from 'react-router-dom';
+import {NavLink, Outlet, useNavigate} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
 
@@ -47,9 +47,20 @@ export function Login() {
 }
 
 export function CreateAccount() {
+    const [email,setEmail] = React.useState("");
+    const [password,setPassword] = React.useState("");
+    const [checkPassword,setCheck] = React.useState("");
+    const [name,setName] = React.useState("");
+    const [dateOfBirth,setDOB] = React.useState(new Date());
+    const navigate = useNavigate();
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        navigate("/appointments");
+    }
+
     return (
         <div className="mainRightContent">
-            <form action="">
+            <form action={handleSubmit}>
                 <div className="formItem">
                     <label for="email">Email:</label>
                     <input type="email" name="email" id="email" placeholder="jane@example.net" />
@@ -60,7 +71,7 @@ export function CreateAccount() {
                 </div>
                 <div className="formItem">
                     <label for="confirmPw">Confirm Password:</label>
-                    <input type="password" name="confirmPw" id="confirmPw" />
+                    <input type="password" name="confirmPw" id="confirmPw" onChange={(e) => setCheck(e.target.value)}/>
                 </div>
                 <div className="formItem">
                     <label for="full-name">Full Name:</label>
@@ -70,7 +81,7 @@ export function CreateAccount() {
                     <label for="dob">Date of Birth:</label>
                     <input type="date" name="dob" id="dob" placeholder="01-01-1970" />
                 </div> 
-                <NavLink to="/appointments"><button type="submit" className="primary"><span>Create</span></button></NavLink>
+                <button type="submit" className="primary"><span>Create</span></button>
             </form>
         </div>
     )
