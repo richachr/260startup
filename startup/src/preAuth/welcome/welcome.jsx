@@ -57,7 +57,11 @@ export function CreateAccount() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (password !== checkPassword) {
-            alert(`Your passwords don't match. Please try again.`)
+            alert(`Your passwords don't match. Please try again.`);
+            return;
+        }
+        if ([name,email,dateOfBirth,password].some((value) => value === "")) {
+            alert(`One or more fields are empty. Please fill them in and resubmit.`);
             return;
         }
         try {
@@ -78,23 +82,23 @@ export function CreateAccount() {
             <form action={handleSubmit}>
                 <div className="formItem">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 <div className="formItem">
                     <label for="pw">Password:</label>
-                    <input type="password" name="pw" id="pw" autoComplete="new-password" onChange={(e) => setPassword(e.target.value)}/>
+                    <input type="password" name="pw" id="pw" autoComplete="new-password" onChange={(e) => setPassword(e.target.value)} required />
                 </div>
                 <div className="formItem">
                     <label for="confirmPw">Confirm Password:</label>
-                    <input type="password" name="confirmPw" id="confirmPw" autoComplete="current-password" onChange={(e) => setCheck(e.target.value)}/>
+                    <input type="password" name="confirmPw" id="confirmPw" autoComplete="current-password" onChange={(e) => setCheck(e.target.value)} required />
                 </div>
                 <div className="formItem">
                     <label for="full-name">Full Name:</label>
-                    <input type="text" name="full-name" id="full-name" placeholder="Alex Smith" onChange={(e) => setName(e.target.value)}/>
+                    <input type="text" name="full-name" id="full-name" placeholder="Alex Smith" onChange={(e) => setName(e.target.value)} required />
                 </div>
                 <div className="formItem">
                     <label for="dob">Date of Birth:</label>
-                    <input type="date" name="dob" id="dob" placeholder="01-01-1970" onChange={(e) => setDOB(e.target.value)}/>
+                    <input type="date" name="dob" id="dob" placeholder="01-01-1970" onChange={(e) => setDOB(e.target.value)} required />
                 </div> 
                 <button type="submit" className="primary" onClick={handleSubmit}><span>Create</span></button>
             </form>
