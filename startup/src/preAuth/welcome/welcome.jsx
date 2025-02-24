@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {NavLink, Outlet, useNavigate} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
@@ -54,21 +54,23 @@ export function CreateAccount() {
     const [name,setName] = React.useState("");
     const [dateOfBirth,setDOB] = React.useState(new Date());
     const navigate = useNavigate();
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        if (password === checkPassword) {
-            bcrypt.hash(password,10)
-            .then((result) => hashValue = result)
-            .catch((err) => console.error(`Error: ${err}`))
-            .finally(() => {
-                setPassword(hashValue);
-                localStorage.setItem(email,{"name": name, "email": email, "dateOfBirth": dateOfBirth, "password": password});
-            });
-            localStorage.setItem(email.name,name);
-            navigate("/appointments");
-        } else {
+        if (password !== checkPassword) {
             alert(`Your passwords don't match. Please try again.`)
+            return;
         }
+        try {
+            const hash = await bcrypt.hash(password,10);
+            console.log(hash);
+            localStorage.setItem(email,JSON.stringify({"name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash}));
+        } catch (err) {
+            console.error(`Error: ${err}`);
+        }
+        if(!(localStorage.getItem(email))) {
+            localStorage.setItem(email,JSON.stringify({"name": name}));
+        }
+        navigate("/appointments");
     }
 
     return (
