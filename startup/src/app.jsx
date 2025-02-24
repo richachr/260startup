@@ -12,9 +12,10 @@ import { CreateAppointment } from './postAuth/create/create';
 import { Scheduler } from './postAuth/scheduler/scheduler';
 
 export default function App() {
-    const [firstName, setFirstName] = React.useState(localStorage.getItem(name).split(" ")[0] || undefined);
-    const currentLoginState = firstname ? true : false;
+    const [userName, setUserName] = React.useState(undefined);
+    const currentLoginState = userName ? true : false;
     const [loginState, setLoginState] = React.useState(currentLoginState);
+    const [firstName, setFirstName] = React.useState('');
 
     return (
         <div className="body">
@@ -27,10 +28,10 @@ export default function App() {
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                <Route element={<PostAuthHeader name={firstName}/>}>
-                    <Route path='/appointments' element={<Appointments />} />
-                    <Route path='/create-appointment' element={<CreateAppointment />} />
-                    <Route path='/scheduler' element={<Scheduler />} />
+                <Route element={<PostAuthHeader name={firstName} userName={userName} />}>
+                    <Route path='/appointments' element={<Appointments userName={userName}/>} />
+                    <Route path='/create-appointment' element={<CreateAppointment userName={userName}/>} />
+                    <Route path='/scheduler' element={<Scheduler userName={userName}/>} />
                 </Route>
                 <Route path='*' element={<ToNotFound />} />
             </Routes>
@@ -54,10 +55,10 @@ function NotFound() {
 }
 
 // TODO: Login/Logout
-// TODO: Account Creation/Storage
 // TODO: Authentication lock on postAuth
 // TODO: View more info for appt
-// TODO: Edit appointment - populate fields in create page
+// TODO: Edit appointment - populate fields in create page, or just deletion?
+// TODO: Export calendar
 // TODO: Notifications
 // TODO: Appointment creation
 // TODO: Scheduler logic
