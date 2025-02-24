@@ -4,15 +4,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarPlus, faFileLines, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 
+function exportAppointments(userName) {
+    const userData = JSON.parse(localStorage.getItem(userName));
+    const appointmentText = JSON.stringify(userData.appointments);
+    const file = new Blob([appointmentText], {type: 'text/plain'});
+    const tempLink = document.createElement('a');
+    tempLink.href = URL.createObjectURL(file);
+    tempLink.download = 'Rappt Appointments.txt';
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    tempLink.remove();
+}
 
-export function Appointments() {
+export function Appointments(props) {
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="docs-together.png" alt="Doctors" />
             <h1>Your Appointments</h1>
             <div className="actions">
                 <NavLink to="/create-appointment"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></NavLink>
-                <button className="secondary"><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
+                <button className="secondary" onClick={exportAppointments(props.userName)}><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
             </div>
             <div className="appointments">
                 <div className="appointment">
@@ -67,5 +78,5 @@ export function Appointments() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
