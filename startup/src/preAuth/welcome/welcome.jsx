@@ -1,7 +1,8 @@
 import React from "react";
 import {NavLink, Outlet, useNavigate} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faArrowRight} from '@fortawesome/free-solid-svg-icons'
+import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
+import bcrypt, { hash } from "bcryptjs";
 
 export function Homepage() {
     return (
@@ -55,7 +56,19 @@ export function CreateAccount() {
     const navigate = useNavigate();
     const handleSubmit = (event) => {
         event.preventDefault();
-        navigate("/appointments");
+        if (password === checkPassword) {
+            bcrypt.hash(password,10)
+            .then((result) => hashValue = result)
+            .catch((err) => console.error(`Error: ${err}`))
+            .finally(() => {
+                setPassword(hashValue);
+                localStorage.setItem(email,{"name": name, "email": email, "dateOfBirth": dateOfBirth, "password": password});
+            });
+            localStorage.setItem(email.name,name);
+            navigate("/appointments");
+        } else {
+            alert(`Your passwords don't match. Please try again.`)
+        }
     }
 
     return (
@@ -63,25 +76,25 @@ export function CreateAccount() {
             <form action={handleSubmit}>
                 <div className="formItem">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" placeholder="jane@example.net" />
+                    <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className="formItem">
                     <label for="pw">Password:</label>
-                    <input type="password" name="pw" id="pw" />
+                    <input type="password" name="pw" id="pw" autoComplete="new-password" onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <div className="formItem">
                     <label for="confirmPw">Confirm Password:</label>
-                    <input type="password" name="confirmPw" id="confirmPw" onChange={(e) => setCheck(e.target.value)}/>
+                    <input type="password" name="confirmPw" id="confirmPw" autoComplete="current-password" onChange={(e) => setCheck(e.target.value)}/>
                 </div>
                 <div className="formItem">
                     <label for="full-name">Full Name:</label>
-                    <input type="text" name="full-name" id="full-name" placeholder="Alex Smith" />
+                    <input type="text" name="full-name" id="full-name" placeholder="Alex Smith" onChange={(e) => setName(e.target.value)}/>
                 </div>
                 <div className="formItem">
                     <label for="dob">Date of Birth:</label>
-                    <input type="date" name="dob" id="dob" placeholder="01-01-1970" />
+                    <input type="date" name="dob" id="dob" placeholder="01-01-1970" onChange={(e) => setDOB(e.target.value)}/>
                 </div> 
-                <button type="submit" className="primary"><span>Create</span></button>
+                <button type="submit" className="primary" onClick={handleSubmit}><span>Create</span></button>
             </form>
         </div>
     )
