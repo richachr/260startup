@@ -66,7 +66,6 @@ export function CreateAccount() {
         }
         try {
             const hash = await bcrypt.hash(password,10);
-            console.log(hash);
             localStorage.setItem(email,JSON.stringify({"name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash}));
         } catch (err) {
             console.error(`Error: ${err}`);
@@ -79,7 +78,7 @@ export function CreateAccount() {
 
     return (
         <div className="mainRightContent">
-            <form action={handleSubmit}>
+            <form>
                 <div className="formItem">
                     <label for="email">Email:</label>
                     <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} required />
