@@ -29,9 +29,10 @@ export default function PostAuthHeader(props) {
                                 </table>
                             </aside>
                         </button>
-                        <NavLink to='/'><button className="danger"><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button></NavLink>
+                        <button className="danger" onClick={() => {props.onLoginChange(false,"",""); navigate('/')}}><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button>
+                        <h5>Hey there, {props.name}!</h5>
                     </nav>
-                    <h5>Hey there, James!</h5>
+                    
                 </div>
             </header>
             <main>
