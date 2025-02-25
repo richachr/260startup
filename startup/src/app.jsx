@@ -23,8 +23,8 @@ export default function App() {
                 <Route element={<PreAuthHeader />}>
                     <Route path='/' element={<Homepage />} exact>
                         <Route index element={<Welcome />} />
-                        <Route path='/login' element={<Login onLoginChange={(loginState,userName,firstName) => {setLoginState(loginState); setUserName(userName); setFirstName(firstName);}}/>} />
-                        <Route path='/create-account' element={<CreateAccount onLoginChange={(loginState,userName,firstName) => {setLoginState(loginState); setUserName(userName); setFirstName(firstName);}}/>} />
+                        <Route path='/login' element={<Login onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setFirstName(name);}}/>} />
+                        <Route path='/create-account' element={<CreateAccount onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setFirstName(name);}}/>} />
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
@@ -55,10 +55,9 @@ function NotFound() {
 }
 
 // TODO: Login/Logout - onLogin
-// TODO: Authentication lock on postAuth
 // TODO: View more info for appt
 // TODO: Edit appointment - populate fields in create page, or just deletion?
-// TODO: Test export calendar
+// TODO: Test export calendar with created appointments
 // TODO: Notifications
 // TODO: Appointment creation
 // TODO: Scheduler logic
