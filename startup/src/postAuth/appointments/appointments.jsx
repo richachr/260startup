@@ -6,7 +6,7 @@ import { faCalendarPlus, faFileLines, faPenToSquare } from "@fortawesome/free-re
 
 function exportAppointments(userName) {
     const userData = JSON.parse(localStorage.getItem(userName));
-    const appointmentText = JSON.stringify(userData.appointments);
+    const appointmentText = JSON.stringify(userData.appointments ? userData.appointments : '');
     const file = new Blob([appointmentText], {type: 'text/plain'});
     const tempLink = document.createElement('a');
     tempLink.href = URL.createObjectURL(file);
@@ -23,7 +23,7 @@ export function Appointments(props) {
             <h1>Your Appointments</h1>
             <div className="actions">
                 <NavLink to="/create-appointment"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></NavLink>
-                <button className="secondary" onClick={exportAppointments(props.userName)}><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
+                <button className="secondary" onClick={() => exportAppointments(props.userName)}><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
             </div>
             <div className="appointments">
                 <div className="appointment">
