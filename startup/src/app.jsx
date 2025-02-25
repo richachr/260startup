@@ -23,12 +23,12 @@ export default function App() {
                 <Route element={<PreAuthHeader />}>
                     <Route path='/' element={<Homepage />} exact>
                         <Route index element={<Welcome />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/create-account' element={<CreateAccount />} />
+                        <Route path='/login' element={<Login onLoginChange={(loginState,userName,firstName) => {setLoginState(loginState); setUserName(userName); setFirstName(firstName);}}/>} />
+                        <Route path='/create-account' element={<CreateAccount onLoginChange={(loginState,userName,firstName) => {setLoginState(loginState); setUserName(userName); setFirstName(firstName);}}/>} />
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                <Route element={<PostAuthHeader name={firstName} userName={userName} />}>
+                <Route element={<PostAuthHeader name={firstName} userName={userName} loginState={loginState}/>}>
                     <Route path='/appointments' element={<Appointments userName={userName}/>} />
                     <Route path='/create-appointment' element={<CreateAppointment userName={userName}/>} />
                     <Route path='/scheduler' element={<Scheduler userName={userName}/>} />
@@ -54,11 +54,11 @@ function NotFound() {
     )
 }
 
-// TODO: Login/Logout
+// TODO: Login/Logout - onLogin
 // TODO: Authentication lock on postAuth
 // TODO: View more info for appt
 // TODO: Edit appointment - populate fields in create page, or just deletion?
-// TODO: Export calendar
+// TODO: Test export calendar
 // TODO: Notifications
 // TODO: Appointment creation
 // TODO: Scheduler logic
