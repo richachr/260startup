@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {NavLink, Outlet, useNavigate} from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
@@ -47,7 +47,7 @@ export function Login() {
     )
 }
 
-export function CreateAccount() {
+export function CreateAccount(props) {
     const [email,setEmail] = React.useState("");
     const [password,setPassword] = React.useState("");
     const [checkPassword,setCheck] = React.useState("");
@@ -73,6 +73,7 @@ export function CreateAccount() {
         if(!(localStorage.getItem(email))) {
             localStorage.setItem(email,JSON.stringify({"name": name}));
         }
+        props.onLoginChange(true,email,name)
         navigate("/appointments");
     }
 
