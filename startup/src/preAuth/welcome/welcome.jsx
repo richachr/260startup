@@ -1,8 +1,8 @@
 import React from "react";
-import {NavLink, Outlet, useNavigate} from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faArrowRight} from '@fortawesome/free-solid-svg-icons';
-import bcrypt, { hash } from "bcryptjs";
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import bcrypt from "bcryptjs";
 
 export function Homepage() {
     return (
@@ -19,40 +19,60 @@ export function Homepage() {
 
 export function Welcome() {
     return (
-    <div className="mainRightContent">
-        <p>RAPPT is a smart appointment scheduler which will help you find appointments at times that work for you, and make sure you're not stuck waiting for months for an urgent appointment.</p>
-        <nav>
-            <NavLink to="/login"><button type="button" className="primary"><span>Login</span></button></NavLink>
-            <NavLink to="/create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
-        </nav>
-    </div>
+        <div className="mainRightContent">
+            <p>RAPPT is a smart appointment scheduler which will help you find appointments at times that work for you, and make sure you're not stuck waiting for months for an urgent appointment.</p>
+            <nav>
+                <NavLink to="/login"><button type="button" className="primary"><span>Login</span></button></NavLink>
+                <NavLink to="/create-account"><button type="button" className="secondary"><span>Create Account</span></button></NavLink>
+            </nav>
+        </div>
     )
 }
 
-export function Login() {
+export function Login(props) {
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const navigate = useNavigate();
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!localStorage.getItem(email)) {
+            alert('No account found with the associated email. Please create an account.');
+            navigate('/create-account');
+            return;
+        }
+        let hash = JSON.parse(localStorage.getItem(email)).hashedPassword;
+        if (await bcrypt.compare(password, hash)) {
+            let name = JSON.parse(localStorage.getItem(email)).name;
+            props.onLoginChange(true, email, name);
+            navigate('/appointments');
+        } else {
+            alert('Password incorrect.');
+            return;
+        }
+    }
     return (
         <div className="mainRightContent">
             <form action="" method="post">
                 <div className="formItem">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" placeholder="jane@example.net" />
+                    <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className="formItem">
                     <label for="pw">Password:</label>
-                    <input type="password" name="pw" id="pw" />
+                    <input type="password" name="pw" id="pw" onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <NavLink to="/appointments"><button type="button" className="secondary"><FontAwesomeIcon icon={faArrowRight} className='fontAwesome' /></button></NavLink>
+                <NavLink to="/appointments"><button type="submit" className="secondary" onClick={handleSubmit}><FontAwesomeIcon icon={faArrowRight} className='fontAwesome' /></button></NavLink>
             </form>
         </div>
     )
 }
 
 export function CreateAccount(props) {
-    const [email,setEmail] = React.useState("");
-    const [password,setPassword] = React.useState("");
-    const [checkPassword,setCheck] = React.useState("");
-    const [name,setName] = React.useState("");
-    const [dateOfBirth,setDOB] = React.useState(new Date());
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [checkPassword, setCheck] = React.useState("");
+    const [name, setName] = React.useState("");
+    const [dateOfBirth, setDOB] = React.useState(new Date());
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -60,20 +80,20 @@ export function CreateAccount(props) {
             alert(`Your passwords don't match. Please try again.`);
             return;
         }
-        if ([name,email,dateOfBirth,password].some((value) => value === "")) {
+        if ([name, email, dateOfBirth, password].some((value) => value === "")) {
             alert(`One or more fields are empty. Please fill them in and resubmit.`);
             return;
         }
         try {
-            const hash = await bcrypt.hash(password,10);
-            localStorage.setItem(email,JSON.stringify({"name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash}));
+            const hash = await bcrypt.hash(password, 10);
+            localStorage.setItem(email, JSON.stringify({ "name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash }));
         } catch (err) {
             console.error(`Error: ${err}`);
         }
-        if(!(localStorage.getItem(email))) {
-            localStorage.setItem(email,JSON.stringify({"name": name}));
+        if (!(localStorage.getItem(email))) {
+            localStorage.setItem(email, JSON.stringify({ "name": name }));
         }
-        props.onLoginChange(true,email,name)
+        props.onLoginChange(true, email, name)
         navigate("/appointments");
     }
 
@@ -99,7 +119,7 @@ export function CreateAccount(props) {
                 <div className="formItem">
                     <label for="dob">Date of Birth:</label>
                     <input type="date" name="dob" id="dob" placeholder="01-01-1970" onChange={(e) => setDOB(e.target.value)} required />
-                </div> 
+                </div>
                 <button type="submit" className="primary" onClick={handleSubmit}><span>Create</span></button>
             </form>
         </div>
