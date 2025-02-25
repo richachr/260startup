@@ -15,7 +15,7 @@ export default function App() {
     const [userName, setUserName] = React.useState(undefined);
     const currentLoginState = userName ? true : false;
     const [loginState, setLoginState] = React.useState(currentLoginState);
-    const [firstName, setFirstName] = React.useState('');
+    const [name, setName] = React.useState('');
 
     return (
         <div className="body">
@@ -23,12 +23,12 @@ export default function App() {
                 <Route element={<PreAuthHeader />}>
                     <Route path='/' element={<Homepage />} exact>
                         <Route index element={<Welcome />} />
-                        <Route path='/login' element={<Login onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setFirstName(name);}}/>} />
-                        <Route path='/create-account' element={<CreateAccount onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setFirstName(name);}}/>} />
+                        <Route path='/login' element={<Login onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>} />
+                        <Route path='/create-account' element={<CreateAccount onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>} />
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                <Route element={<PostAuthHeader name={firstName} userName={userName} loginState={loginState}/>}>
+                <Route element={<PostAuthHeader loginState={loginState} name={name} userName={userName} onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>}>
                     <Route path='/appointments' element={<Appointments userName={userName}/>} />
                     <Route path='/create-appointment' element={<CreateAppointment userName={userName}/>} />
                     <Route path='/scheduler' element={<Scheduler userName={userName}/>} />
@@ -54,7 +54,7 @@ function NotFound() {
     )
 }
 
-// TODO: Login/Logout - onLogin
+// TODO: Form pattern validation
 // TODO: View more info for appt
 // TODO: Edit appointment - populate fields in create page, or just deletion?
 // TODO: Test export calendar with created appointments
