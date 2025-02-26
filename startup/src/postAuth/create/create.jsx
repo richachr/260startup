@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { v4 as uuid } from "uuid";
 
 export function CreateAppointment(props) {
     const navigate = useNavigate();
@@ -16,6 +17,46 @@ export function CreateAppointment(props) {
     const [painLevel, setPainLevel] = useState(undefined);
     const [urgencyLevel, setUrgencyLevel] = useState(undefined);
     const [symptoms, setSymptoms] = useState(undefined);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const appointmentID = uuid();
+        const appointmentData = {[appointmentID]: {
+            name: name,
+            dateOfBirth: dateOfBirth,
+            gender: gender,
+            phone: phone,
+            address: address,
+            doctor: doctor,
+            purpose: purpose,
+            painLevel: painLevel,
+            urgencyLevel: urgencyLevel,
+            symptoms: symptoms
+        }};
+        if (Object.values(appointmentData.appointmentID).some((value) => (value === "" || value === undefined))) {
+            alert('One or more of the fields are empty. Please check your response and resubmit.')
+            return;
+        }
+        if (name===userData.name && dateOfBirth===userData.dateOfBirth) {
+            if(!userData.gender) {
+                userData.gender = gender;
+            }
+            if(!userData.phone) {
+                userData.phone = phone;
+            }
+            if(!userData.address) {
+                userData.address = address;
+            }
+        }
+        if(userData.appointments) {
+            userData.appointments.push(appointmentData);
+        } else {
+            userData.appointments = [appointmentData];
+        }
+        localStorage.setItem(props.userName,userData);
+        navigate('/scheduler')
+    }
+
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="papers.png" alt="Person doing paperwork" />
@@ -82,7 +123,7 @@ export function CreateAppointment(props) {
             </form>
             <nav>
                 <button onClick={() => navigate(-1)} type="button" className="danger"><span>Back</span></button>
-                <NavLink to="/scheduler"><button type="button" className="primary"><FontAwesomeIcon icon={faArrowRight} className="fontAwesome" /></button></NavLink>
+                <button type="submit" onClick={handleSubmit} className="primary"><FontAwesomeIcon icon={faArrowRight} className="fontAwesome" /></button>
             </nav>
         </div>
     )
