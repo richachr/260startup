@@ -33,7 +33,7 @@ export function CreateAppointment(props) {
             urgencyLevel: urgencyLevel,
             symptoms: symptoms
         }};
-        if (Object.values(appointmentData.appointmentID).some((value) => (value === "" || value === undefined))) {
+        if (Object.values(appointmentData[appointmentID]).some((value) => (value === "" || value === undefined))) {
             alert('One or more of the fields are empty. Please check your response and resubmit.')
             return;
         }
@@ -53,7 +53,7 @@ export function CreateAppointment(props) {
         } else {
             userData.appointments = [appointmentData];
         }
-        localStorage.setItem(props.userName,userData);
+        localStorage.setItem(props.userName,JSON.stringify(userData));
         navigate('/scheduler')
     }
 
