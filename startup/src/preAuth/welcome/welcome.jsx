@@ -55,7 +55,7 @@ export function Login(props) {
             <form action="" method="post">
                 <div className="formItem">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" pattern=".+@.+\.[a-zA-z]{2,}$" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className="formItem">
                     <label for="pw">Password:</label>
@@ -72,6 +72,7 @@ export function CreateAccount(props) {
     const [password, setPassword] = React.useState("");
     const [checkPassword, setCheck] = React.useState("");
     const [name, setName] = React.useState("");
+    const [doctorStatus, setDoctorStatus] = React.useState(false);
     const [dateOfBirth, setDOB] = React.useState(new Date());
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
@@ -84,9 +85,15 @@ export function CreateAccount(props) {
             alert(`One or more fields are empty. Please fill them in and resubmit.`);
             return;
         }
+        if (localStorage.getItem(email)) {alert('That account already exists.'); return;}
+        if (doctorStatus) {
+            let currentDoctors = localStorage.getItem("doctors") ? JSON.parse(localStorage.getItem("doctors")) : {}
+            currentDoctors[email] = name;
+            localStorage.setItem("doctors",JSON.stringify(currentDoctors));
+        }
         try {
             const hash = await bcrypt.hash(password, 10);
-            localStorage.setItem(email, JSON.stringify({ "name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash }));
+            localStorage.setItem(email, JSON.stringify({ "name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash, "appointments": [] }));
         } catch (err) {
             console.error(`Error: ${err}`);
         }
@@ -102,7 +109,7 @@ export function CreateAccount(props) {
             <form>
                 <div className="formItem">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} required />
+                    <input type="email" pattern=".+@.+\.[a-zA-z]{2,}$" name="email" id="email" placeholder="jane@example.net" onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 <div className="formItem">
                     <label for="pw">Password:</label>
@@ -119,6 +126,9 @@ export function CreateAccount(props) {
                 <div className="formItem">
                     <label for="dob">Date of Birth:</label>
                     <input type="date" name="dob" id="dob" placeholder="01-01-1970" onChange={(e) => setDOB(e.target.value)} required />
+                </div>
+                <div className="formItem">
+                    <label for="doctorStatus" style={{textAlign: "center"}}><span>Check if you are a doctor: </span><input type="checkbox" name="doctorStatus" id="doctorStatus" value={true} onChange={(e) => setDoctorStatus(e.target.value)} /></label>
                 </div>
                 <button type="submit" className="primary" onClick={handleSubmit}><span>Create</span></button>
             </form>
