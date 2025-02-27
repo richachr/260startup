@@ -1,5 +1,32 @@
+#postAuth.rightContent {
+    position: relative;
+}
+
 aside.notifications {
-    display: none;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.5s ease-in-out;
+    background-color: #ffffff;
+    transform: scale(0);
+    top: 100%;
+    right: 7vw;
+    height: 0;
+    width: 0;
+    transform-origin: center;
+    border-radius: 10px;
+    border: 2px solid #545454;
+    box-shadow: 0px 0px 10px #bbbbbb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+aside.notifications.show {
+    height: 300px;
+    width: 300px;
+    transform: scale(1);
 }
 
 * {
@@ -43,8 +70,9 @@ img#postAuth {
 }
 
 .actions button {
-    padding: 0 1vw;
+    padding: 1vw;
     width: fit-content;
+    height: auto;
 }
 
 #postAuth.mainContent nav button {
@@ -106,6 +134,7 @@ fieldset .formItem label input {
 }
 
 @media (aspect-ratio < 1) {
+
     .actions {
         height: auto;
     }
