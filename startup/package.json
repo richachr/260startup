@@ -23,6 +23,8 @@
     "bcryptjs": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.5"
+    "react-error-boundary": "^5.0.0",
+    "react-router-dom": "^7.1.5",
+    "uuid": "^11.1.0"
   }
 }
