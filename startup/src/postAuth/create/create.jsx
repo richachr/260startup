@@ -7,20 +7,22 @@ import { v4 as uuid } from "uuid";
 export function CreateAppointment(props) {
     const navigate = useNavigate();
     let userData = JSON.parse(localStorage.getItem(props.userName));
-    const [name,setName] = useState(userData.name);
-    const [dateOfBirth, setDateOfBirth] = useState(userData.dateOfBirth);
-    const [gender, setGender] = useState(userData.gender ? userData.gender : undefined);
-    const [phone, setPhone] = useState(userData.phone ? userData.phone : undefined);
-    const [address, setAddress] = useState(userData.address ? userData.address : undefined);
-    const [doctor, setDoctor] = useState(undefined);
-    const [purpose, setPurpose] = useState(undefined);
-    const [painLevel, setPainLevel] = useState(undefined);
-    const [urgencyLevel, setUrgencyLevel] = useState(undefined);
-    const [symptoms, setSymptoms] = useState(undefined);
+    const savedData = props.currentApptData ? Object.values(props.currentApptData)[0] : {};
+    const [name,setName] = useState(savedData.name ? savedData.name : userData.name);
+    const [dateOfBirth, setDateOfBirth] = useState(savedData.dateOfBirth ? savedData.dateOfBirth : userData.dateOfBirth);
+    const [gender, setGender] = useState(savedData.gender ? savedData.gender : userData.gender ? userData.gender : undefined);
+    const [phone, setPhone] = useState(savedData.phone ? savedData.phone : userData.phone ? userData.phone : undefined);
+    const [address, setAddress] = useState(savedData.address ? savedData.address : userData.address ? userData.address : undefined);
+    const [doctor, setDoctor] = useState(savedData.doctor ? savedData.doctor : undefined);
+    const [purpose, setPurpose] = useState(savedData.purpose ? savedData.purpose : undefined);
+    const [painLevel, setPainLevel] = useState(savedData.painLevel ? savedData.painLevel : undefined);
+    const [urgencyLevel, setUrgencyLevel] = useState(savedData.urgencyLevel ? savedData.urgencyLevel : undefined);
+    const [symptoms, setSymptoms] = useState(savedData.symptoms ? savedData.symptoms : undefined);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const appointmentID = uuid();
+        const appointmentID = props.currentApptId ? props.currentApptId : uuid();
+        console.log(appointmentID);
         const appointmentData = {[appointmentID]: {
             name: name,
             dateOfBirth: dateOfBirth,
@@ -48,11 +50,7 @@ export function CreateAppointment(props) {
                 userData.address = address;
             }
         }
-        if(userData.appointments) {
-            userData.appointments.push(appointmentData);
-        } else {
-            userData.appointments = [appointmentData];
-        }
+        props.onCurrentApptChange(appointmentID,appointmentData);
         localStorage.setItem(props.userName,JSON.stringify(userData));
         navigate('/scheduler')
     }
@@ -81,7 +79,7 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="phone">What's the best phone number for contacting the patient?</label>
-                    <input type="tel" name="phone" id="phone" placeholder="(801) 555-2039" defaultValue={phone} onChange={(e) => setPhone(e.target.value)}/>
+                    <input type="tel" pattern="\(?[\d]{3}\)?\s?\-?[\d]{3}\s?\-?[\d]{4}$" name="phone" id="phone" placeholder="(801) 555-2039" defaultValue={phone} onChange={(e) => setPhone(e.target.value)}/>
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="address">What's the patient's address?</label>
@@ -89,7 +87,7 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="doctor">Which doctor are you looking to see?</label>
-                    <select name="doctor" id="doctor" onChange={(e) => setDoctor(e.target.value)}>
+                    <select name="doctor" id="doctor" defaultValue={doctor} onChange={(e) => setDoctor(e.target.value)}>
                         <option></option>
                         <option value="1">Dr. Andrew Smithfield</option>
                         <option value="2">Dr. Sandra Martinez</option>
@@ -98,7 +96,7 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="purpose">What's the purpose of the appointment?</label>
-                    <select name="purpose" id="purpose" onChange={(e) => setPurpose(e.target.value)}>
+                    <select name="purpose" id="purpose" defaultValue={purpose} onChange={(e) => setPurpose(e.target.value)}>
                         <option></option>
                         <option value="Regular Check-up">Regular Check-up</option>
                         <option value="Follow-up Appointment">Follow-up Appointment</option>
@@ -110,19 +108,19 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="pain">How would you rate your pain on a scale of 1-10?</label>
-                    <input type="number" name="pain" id="pain" min="1" max="10" onChange={(e) => setPainLevel(e.target.value)}/>
+                    <input type="number" name="pain" id="pain" min="1" max="10"  defaultValue={painLevel} onChange={(e) => setPainLevel(e.target.value)}/>
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="urgency">How would you rate the urgency of your appointment on a scale of 1-10?</label>
-                    <input type="number" name="urgency" id="urgency" min="1" max="10" onChange={(e) => setUrgencyLevel(e.target.value)}/>
+                    <input type="number" name="urgency" id="urgency" min="1" max="10" defaultValue={urgencyLevel} onChange={(e) => setUrgencyLevel(e.target.value)}/>
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="symptoms">What are your symptoms?</label>
-                    <input type="text" name="symptoms" id="symptoms" onChange={(e) => setSymptoms(e.target.value)}/>
+                    <input type="text" name="symptoms" id="symptoms" defaultValue={symptoms} onChange={(e) => setSymptoms(e.target.value)}/>
                 </div>
             </form>
             <nav>
-                <button onClick={() => navigate(-1)} type="button" className="danger"><span>Back</span></button>
+                <button onClick={() => {props.onCurrentApptChange(null,null); navigate(-1)}} type="button" className="danger"><span>Back</span></button>
                 <button type="submit" onClick={handleSubmit} className="primary"><FontAwesomeIcon icon={faArrowRight} className="fontAwesome" /></button>
             </nav>
         </div>
