@@ -16,6 +16,8 @@ export default function App() {
     const currentLoginState = userName ? true : false;
     const [loginState, setLoginState] = React.useState(currentLoginState);
     const [name, setName] = React.useState('');
+    const [currentApptId, setCurrentApptId] = React.useState(null);
+    const [currentApptData, setCurrentApptData] = React.useState(null);
 
     return (
         <div className="body">
@@ -30,8 +32,8 @@ export default function App() {
                 </Route>
                 <Route element={<PostAuthHeader loginState={loginState} name={name} userName={userName} onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>}>
                     <Route path='/appointments' element={<Appointments userName={userName}/>} />
-                    <Route path='/create-appointment' element={<CreateAppointment userName={userName}/>} />
-                    <Route path='/scheduler' element={<Scheduler userName={userName}/>} />
+                    <Route path='/create-appointment' element={<CreateAppointment userName={userName} currentApptId={currentApptId} currentApptData={currentApptData} onCurrentApptChange={(currentApptId,currentApptData) => {setCurrentApptId(currentApptId); setCurrentApptData(currentApptData)}}/>} />
+                    <Route path='/scheduler' element={<Scheduler userName={userName} currentApptId={currentApptId} currentApptData={currentApptData} onCurrentApptChange={(currentApptId,currentApptData) => {setCurrentApptId(currentApptId); setCurrentApptData(currentApptData)}}/>} />
                 </Route>
                 <Route path='*' element={<ToNotFound />} />
             </Routes>
@@ -54,11 +56,7 @@ function NotFound() {
     )
 }
 
-// TODO: Form pattern validation
-// TODO: View more info for appt
-// TODO: Edit appointment - populate fields in create page, or just deletion?
-// TODO: Test export calendar with created appointments
-// TODO: Notifications
-// TODO: Appointment creation
+// Intensive
 // TODO: Scheduler logic
-// TODO: Error messages?
+// TODO: Notifications random messages.
+// TODO: Doctor list fetching for appointment creation and display, mutual appearance and deletion, primary name
