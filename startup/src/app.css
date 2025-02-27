@@ -122,6 +122,10 @@ button.secondary:hover * {
     color: #ffffff;
 }
 
+button.secondary:hover > aside * {
+    color: #545454;
+}
+
 button:hover {
     box-shadow: 5px 5px 10px #bbbbbb;
     cursor: pointer;
@@ -192,6 +196,7 @@ input, select {
     color: #545454;
     border: 2px solid #545454;
     overflow: scroll;
+    scrollbar-width: 0;
 }
 
 .formItem label, label {
