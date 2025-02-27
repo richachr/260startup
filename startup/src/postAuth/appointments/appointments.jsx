@@ -22,18 +22,10 @@ function fetchAppointments(userName) {
 }
 
 function AppointmentsBlock(props) {
-    const [appointments, setAppointments] = React.useState(fetchAppointments(props.userName));
-
-    useEffect(() => {
-        const newAppointments = fetchAppointments(props.userName);
-        if (JSON.stringify(newAppointments) !== JSON.stringify(appointments)) {
-            setAppointments(newAppointments);
-        }
-    },[props.userName,appointments]);
     return (
         <div className="appointments">
-            {appointments.map((value) => {
-                return <Appointment data={value} key={Object.keys(value)[0]} />;
+            {props.appointments.map((value) => {
+                return <Appointment data={value} key={Object.keys(value)[0]} userName={props.userName} onAppointmentsChange={props.onAppointmentsChange} />;
             })}
         </div>
     )
@@ -42,23 +34,41 @@ function AppointmentsBlock(props) {
 function showInfo(id) {
     const parent = document.getElementById(id);
     const target = parent.querySelector('.additionalApptInfo');
-    if (target.style.display === 'none') {
-        target.style.display = 'flex';
+    if (target.style.height === '0px') {
+        target.style.height = '100%'
+        target.style.width = '100%';
         return;
     } else {
-        target.style.display = 'none';
+        target.style.height = '0px';
+        target.style.width = '0px';
         return;
     }
 }
 
-function Appointment({data}) {
+function deleteAppointment(id,userName,setAppointments) {
+    let userData = JSON.parse(localStorage.getItem(userName));
+    let appointments = userData.appointments;
+    let newAppointments = [];
+    appointments.forEach(element => {
+        if (Object.keys(element)[0] !== id) {
+            newAppointments.push(element);
+        }
+    });
+    setAppointments(newAppointments);
+    userData.appointments = newAppointments;
+    localStorage.setItem(userName,JSON.stringify(userData));
+    return;
+}
+
+function Appointment({data, userName, onAppointmentsChange}) {
     const apptInfo = Object.values(data)[0];
-    const idValue = Object.keys(data)[0]
+    const idValue = Object.keys(data)[0];
+    
     return (
         <div className="appointment" id={idValue}>
             <span>{apptInfo.doctor}</span>
             <span>{apptInfo.time ? apptInfo.time : "Unscheduled"}</span>
-            <div className="additionalApptInfo">
+            <div className="additionalApptInfo" style={{width: 0, height: 0}}>
                 <p>Patient Name: {apptInfo.name}</p>
                 <p>Date of Birth: {apptInfo.dateOfBirth}</p>
                 <p>Gender: {apptInfo.gender}</p>
@@ -74,13 +84,21 @@ function Appointment({data}) {
             </div>
             <div className="apptActions">
                 <button className="secondary" onClick={() => showInfo(idValue)}><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                <button className="danger" onClick="deleteAppt()"><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
+                <button className="danger" onClick={() => deleteAppointment(idValue,userName,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
             </div>
         </div>
     )
 }
 
 export function Appointments(props) {
+    const [appointments, setAppointments] = React.useState(fetchAppointments(props.userName));
+
+    useEffect(() => {
+        const newAppointments = fetchAppointments(props.userName);
+        if (JSON.stringify(newAppointments) !== JSON.stringify(appointments)) {
+            setAppointments(newAppointments);
+        }
+    },[props.userName,appointments]);
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="docs-together.png" alt="Doctors" />
@@ -89,7 +107,7 @@ export function Appointments(props) {
                 <NavLink to="/create-appointment"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></NavLink>
                 <button className="secondary" onClick={() => exportAppointments(props.userName)}><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
             </div>
-            <AppointmentsBlock userName={props.userName} />
+            <AppointmentsBlock userName={props.userName} appointments={appointments} onAppointmentsChange={(newAppointments) => setAppointments(newAppointments)} />
         </div>
     );
 }
