@@ -22,7 +22,6 @@ export function CreateAppointment(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const appointmentID = props.currentApptId ? props.currentApptId : uuid();
-        console.log(appointmentID);
         const appointmentData = {[appointmentID]: {
             name: name,
             dateOfBirth: dateOfBirth,
