@@ -19,7 +19,16 @@ header#postAuth nav > * {
 }
 
 .additionalApptInfo {
-    display: none;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 30vw;
+    flex-direction: column;
+    margin-bottom: 1vh;
+    transition: all .5s ease-in-out;
+}
+
+.additionalApptInfo * {
+    margin-bottom: 1vh;
 }
 
 img#postAuth {
@@ -119,5 +128,9 @@ fieldset .formItem label input {
 
     fieldset .formItem {
         margin-bottom: 2vh;
+    }
+
+    .additionalApptInfo {
+        max-width: none;
     }
 }
