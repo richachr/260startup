@@ -4,6 +4,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
 
+function DoctorsInput(props) {
+    const doctors = localStorage.getItem("doctors") ? JSON.parse(localStorage.getItem("doctors")) : {"james.howard@ihc.org": "James Howard"};
+    return (
+        <select name="doctor" id="doctor" defaultValue={props.doctor} onChange={(e) => props.setDoctor(e.target.value)}>
+            <option></option>
+            {Object.entries(doctors).map(([key,value]) => {
+                return <option key={key} value={key}>{`Dr. ${value}`}</option>
+            })}
+        </select>
+    )
+}
+
 export function CreateAppointment(props) {
     const navigate = useNavigate();
     let userData = JSON.parse(localStorage.getItem(props.userName));
@@ -86,12 +98,7 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="doctor">Which doctor are you looking to see?</label>
-                    <select name="doctor" id="doctor" defaultValue={doctor} onChange={(e) => setDoctor(e.target.value)}>
-                        <option></option>
-                        <option value="1">Dr. Andrew Smithfield</option>
-                        <option value="2">Dr. Sandra Martinez</option>
-                        <option value="3">Dr. Michael Jenkins</option>
-                    </select>
+                    <DoctorsInput setDoctor={(value) => setDoctor(value)} doctor={doctor}/>
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="purpose">What's the purpose of the appointment?</label>
