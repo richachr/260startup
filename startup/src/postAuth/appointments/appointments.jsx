@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import { faCalendarPlus, faFileLines, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { faCalendarPlus, faCalendarXmark, faFileLines, faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 function exportAppointments(userName) {
     const userData = JSON.parse(localStorage.getItem(userName));
@@ -39,10 +39,23 @@ function AppointmentsBlock(props) {
     )
 }
 
+function showInfo(id) {
+    const parent = document.getElementById(id);
+    const target = parent.querySelector('.additionalApptInfo');
+    if (target.style.display === 'none') {
+        target.style.display = 'flex';
+        return;
+    } else {
+        target.style.display = 'none';
+        return;
+    }
+}
+
 function Appointment({data}) {
     const apptInfo = Object.values(data)[0];
+    const idValue = Object.keys(data)[0]
     return (
-        <div className="appointment" id={Object.keys(data)[0]}>
+        <div className="appointment" id={idValue}>
             <span>{apptInfo.doctor}</span>
             <span>{apptInfo.time ? apptInfo.time : "Unscheduled"}</span>
             <div className="additionalApptInfo">
@@ -60,8 +73,8 @@ function Appointment({data}) {
                 <p>Scheduling Class: {apptInfo.schedulingClass ? apptInfo.schedulingClass : "Uncalculated"}</p>
             </div>
             <div className="apptActions">
-                <button className="secondary" onClick="showInfo()"><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                <button className="primary" onClick="editAppt()"><FontAwesomeIcon icon={faPenToSquare} className="fontAwesome" /></button>
+                <button className="secondary" onClick={() => showInfo(idValue)}><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
+                <button className="danger" onClick="deleteAppt()"><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
             </div>
         </div>
     )
