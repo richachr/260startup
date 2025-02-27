@@ -73,7 +73,7 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="gender">What's the patient's gender?</label>
-                    <select name="gender" id="gender" defaultChecked={gender} onChange={(e) => setGender(e.target.value)}>
+                    <select name="gender" id="gender" defaultValue={gender} onChange={(e) => setGender(e.target.value)}>
                         <option value={undefined}></option>
                         <option value="Female">Female</option>
                         <option value="Male">Male</option>
@@ -100,12 +100,12 @@ export function CreateAppointment(props) {
                     <label for="purpose">What's the purpose of the appointment?</label>
                     <select name="purpose" id="purpose" onChange={(e) => setPurpose(e.target.value)}>
                         <option></option>
-                        <option value="regular">Regular Check-up</option>
-                        <option value="followUp">Follow-up Appointment</option>
-                        <option value="consult">Consultation</option>
-                        <option value="urgent">Urgent Treatment</option>
-                        <option value="nonUrgent">Non-urgent Treatment</option>
-                        <option value="test">Testing/Diagnosis</option>
+                        <option value="Regular Check-up">Regular Check-up</option>
+                        <option value="Follow-up Appointment">Follow-up Appointment</option>
+                        <option value="Consultation">Consultation</option>
+                        <option value="Urgent Treatment">Urgent Treatment</option>
+                        <option value="Non-urgent Treatment">Non-urgent Treatment</option>
+                        <option value="Testing/DiagnosisZX ">Testing/Diagnosis</option>
                     </select>
                 </div>
                 <div id="postAuth" className="formItem">
