@@ -6,6 +6,19 @@ import { faBell } from '@fortawesome/free-regular-svg-icons';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { ErrorBoundary } from 'react-error-boundary';
 
+function showNotifications() {
+    const target = document.getElementById('notificationsBlock');
+    if (target.style.height === '0px') {
+        target.style.height = '100%'
+        target.style.width = '100%';
+        return;
+    } else {
+        target.style.height = '0px';
+        target.style.width = '0px';
+        return;
+    }
+}
+
 export default function PostAuthHeader(props) {
     const navigate = useNavigate();
     useEffect(() => {
@@ -21,13 +34,15 @@ export default function PostAuthHeader(props) {
                 </div>
                 <div className="rightContent">
                     <nav>
-                        <button className="secondary"><FontAwesomeIcon icon={faBell} className='fontAwesome' />
-                            <aside className="notifications">
+                        <button className="secondary" onClick={showNotifications}><FontAwesomeIcon icon={faBell} className='fontAwesome' />
+                            <aside className="notifications" id="notificationsBlock" style={{height: '0px', width: '0px'}}>
                                 <h5>Notifications</h5>
-                                <table>
-                                    <tbody><tr><td><span>Dr. Smithfield</span> <span>scheduled</span> an appointment for <span>James Haskell</span> on <span>February 25th, 2025</span>.</td></tr>
-                                    <tr><td><span>Dr. Jenkins</span> <span>cancelled</span> an appointment for <span>Emily Haskell</span> on <span>March 14th, 2025</span>.</td></tr></tbody>
-                                </table>
+                                <div className="notificationItem">
+                                    <span>Dr. Smithfield</span> <span>scheduled</span> an appointment for <span>James Haskell</span> on <span>February 25th, 2025</span>.
+                                </div>
+                                <div className="notificationItem">
+                                    <span>Dr. Jenkins</span> <span>cancelled</span> an appointment for <span>Emily Haskell</span> on <span>March 14th, 2025</span>.
+                                </div>
                             </aside>
                         </button>
                         <button className="danger" onClick={() => {props.onLoginChange(false,"",""); navigate('/')}}><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button>
