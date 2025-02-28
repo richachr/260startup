@@ -56,6 +56,3 @@ function NotFound() {
     )
 }
 
-// Intensive
-// TODO: Scheduler logic
-// TODO: Doctor list fetching for primary name, mutual appearance and deletion
