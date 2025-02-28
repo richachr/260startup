@@ -11,6 +11,30 @@ function showNotifications() {
     target.classList.toggle('show');
 }
 
+function NotificationsBlock(props) {
+    const [notifications, setNotifications] = React.useState([]);
+    function generateNotif() {
+        setNotifications((previous) => {return [...previous, "Dr. Howard joined the medical team at BYU!"]});
+        let doctors = localStorage.getItem("doctors") ? JSON.parse(localStorage.getItem("doctors")) : {};
+        console.log(notifications);
+        doctors["james.howard@ihc.org"] = "James Howard";
+        localStorage.setItem("doctors", JSON.stringify(doctors));
+        console.log("Notification sent.");
+    }
+    useEffect(() => {
+        const interval = setInterval(generateNotif, 15000);
+        return () => clearInterval(interval);
+    },[]);
+    return (
+        <aside className="notifications" id="notificationsBlock">
+            <h5>Notifications</h5>
+            {notifications.map((text, index) => {
+                return <div key={index} className="notificationItem">{text}</div>;
+            })}
+        </aside>
+    )
+}
+
 export default function PostAuthHeader(props) {
     const navigate = useNavigate();
     useEffect(() => {
@@ -30,15 +54,7 @@ export default function PostAuthHeader(props) {
                         <button className="danger" onClick={() => {props.onLoginChange(false,"",""); navigate('/')}}><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button>
                         <h5>Hey there, {props.name}!</h5>
                     </nav>
-                    <aside className="notifications" id="notificationsBlock">
-                        <h5>Notifications</h5>
-                        <div className="notificationItem">
-                            <span>Dr. Smithfield</span> <span>scheduled</span> an appointment for <span>James Haskell</span> on <span>February 25th, 2025</span>.
-                        </div>
-                        <div className="notificationItem">
-                            <span>Dr. Jenkins</span> <span>cancelled</span> an appointment for <span>Emily Haskell</span> on <span>March 14th, 2025</span>.
-                        </div>
-                    </aside>
+                    <NotificationsBlock />
                 </div>
             </header>
             <main>
