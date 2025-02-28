@@ -16,10 +16,8 @@ function NotificationsBlock(props) {
     function generateNotif() {
         setNotifications((previous) => {return [...previous, "Dr. Howard joined the medical team at BYU!"]});
         let doctors = localStorage.getItem("doctors") ? JSON.parse(localStorage.getItem("doctors")) : {};
-        console.log(notifications);
         doctors["james.howard@ihc.org"] = "James Howard";
         localStorage.setItem("doctors", JSON.stringify(doctors));
-        console.log("Notification sent.");
     }
     useEffect(() => {
         const interval = setInterval(generateNotif, 15000);
