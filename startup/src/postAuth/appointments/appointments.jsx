@@ -24,9 +24,9 @@ function fetchAppointments(userName) {
 function AppointmentsBlock(props) {
     return (
         <div className="appointments">
-            {props.appointments.map((value) => {
+            {(!(props.appointments.length === 0)) ? props.appointments.map((value) => {
                 return <Appointment data={value} key={Object.keys(value)[0]} userName={props.userName} onAppointmentsChange={props.onAppointmentsChange} />;
-            })}
+            }) : <div className="appointment"><h4>No appointments found.</h4></div>}
         </div>
     )
 }
@@ -45,18 +45,32 @@ function showInfo(id) {
     }
 }
 
-function deleteAppointment(id,userName,setAppointments) {
+function deleteAppointment(id,userName,doctor,setAppointments) {
     let userData = JSON.parse(localStorage.getItem(userName));
-    let appointments = userData.appointments;
-    let newAppointments = [];
-    appointments.forEach(element => {
+    let userAppointments = userData.appointments;
+    let doctorData = JSON.parse(localStorage.getItem(doctor));
+    let doctorAppointments = doctorData.appointments;
+    console.log(userAppointments);
+    console.log(doctorAppointments);
+    let newUserAppointments = [];
+    let newDoctorAppointments = [];
+    userAppointments.forEach(element => {
         if (Object.keys(element)[0] !== id) {
-            newAppointments.push(element);
+            newUserAppointments.push(element);
         }
     });
-    setAppointments(newAppointments);
-    userData.appointments = newAppointments;
+    doctorAppointments.forEach(element => {
+        if (Object.keys(element)[0] !== id) {
+            newDoctorAppointments.push(element);
+        }
+    });
+    console.log(newUserAppointments);
+    console.log(newDoctorAppointments);
+    setAppointments(newUserAppointments);
+    userData.appointments = newUserAppointments;
+    doctorData.appointments = newDoctorAppointments;
     localStorage.setItem(userName,JSON.stringify(userData));
+    localStorage.setItem(doctor,JSON.stringify(doctorData));
     return;
 }
 
@@ -66,25 +80,27 @@ function Appointment({data, userName, onAppointmentsChange}) {
     
     return (
         <div className="appointment" id={idValue}>
-            <span>{apptInfo.doctor}</span>
-            <span>{apptInfo.time ? apptInfo.time : "Unscheduled"}</span>
-            <div className="additionalApptInfo" style={{width: 0, height: 0}}>
-                <p>Patient Name: {apptInfo.name}</p>
-                <p>Date of Birth: {apptInfo.dateOfBirth}</p>
-                <p>Gender: {apptInfo.gender}</p>
-                <p>Phone Number: {apptInfo.phone}</p>
-                <p>Address: {apptInfo.address}</p>
-                <p>Purpose: {apptInfo.purpose}</p>
-                <p>Pain (1-10): {apptInfo.painLevel}</p>
-                <p>Urgency (1-10): {apptInfo.urgencyLevel}</p>
-                <p>Symptoms: {apptInfo.symptoms}</p>
-                <p>Inferred Diagnosis: {apptInfo.diagnosis ? apptInfo.diagnosis : "None"}</p>
-                <p>Seriousness: {apptInfo.seriousness ? apptInfo.seriousness : "Uncalculated"}</p>
-                <p>Scheduling Class: {apptInfo.schedulingClass ? apptInfo.schedulingClass : "Uncalculated"}</p>
+            <div className="denseInfoContainer">
+                <span>{apptInfo.doctor===userName ? apptInfo.name : JSON.parse(localStorage.getItem("doctors"))[apptInfo.doctor]}</span>
+                <span>{apptInfo.time ? apptInfo.time : "Unscheduled"}</span>
+                <div className="additionalApptInfo" style={{width: 0, height: 0}}>
+                    <p>Patient Name: {apptInfo.name}</p>
+                    <p>Date of Birth: {apptInfo.dateOfBirth}</p>
+                    <p>Gender: {apptInfo.gender}</p>
+                    <p>Phone Number: {apptInfo.phone}</p>
+                    <p>Address: {apptInfo.address}</p>
+                    <p>Purpose: {apptInfo.purpose}</p>
+                    <p>Pain (1-10): {apptInfo.painLevel}</p>
+                    <p>Urgency (1-10): {apptInfo.urgencyLevel}</p>
+                    <p>Symptoms: {apptInfo.symptoms}</p>
+                    <p>Inferred Diagnosis: {apptInfo.diagnosis ? apptInfo.diagnosis : "None"}</p>
+                    <p>Seriousness: {apptInfo.seriousness ? apptInfo.seriousness : "Uncalculated"}</p>
+                    <p>Scheduling Class: {apptInfo.schedulingClass ? apptInfo.schedulingClass : "Uncalculated"}</p>
+                </div>
             </div>
             <div className="apptActions">
                 <button className="secondary" onClick={() => showInfo(idValue)}><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                <button className="danger" onClick={() => deleteAppointment(idValue,userName,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
+                <button className="danger" onClick={() => deleteAppointment(idValue,userName,apptInfo.doctor,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
             </div>
         </div>
     )
