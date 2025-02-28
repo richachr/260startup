@@ -90,7 +90,7 @@ export function CreateAppointment(props) {
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="phone">What's the best phone number for contacting the patient?</label>
-                    <input type="tel" pattern="\(?[\d]{3}\)?\s?\-?[\d]{3}\s?\-?[\d]{4}$" name="phone" id="phone" placeholder="(801) 555-2039" defaultValue={phone} onChange={(e) => setPhone(e.target.value)}/>
+                    <input type="tel" name="phone" id="phone" placeholder="(801) 555-2039" defaultValue={phone} onChange={(e) => setPhone(e.target.value)}/>
                 </div>
                 <div id="postAuth" className="formItem">
                     <label for="address">What's the patient's address?</label>
@@ -109,7 +109,7 @@ export function CreateAppointment(props) {
                         <option value="Consultation">Consultation</option>
                         <option value="Urgent Treatment">Urgent Treatment</option>
                         <option value="Non-urgent Treatment">Non-urgent Treatment</option>
-                        <option value="Testing/DiagnosisZX ">Testing/Diagnosis</option>
+                        <option value="Testing/Diagnosis">Testing/Diagnosis</option>
                     </select>
                 </div>
                 <div id="postAuth" className="formItem">
