@@ -39,6 +39,11 @@
     margin: 0;
 }
 
+input#doctorStatus {
+    scrollbar-width: none;
+    width: 3vh;
+}
+
 @Media (aspect-ratio < 1) {
     #preAuth.mainContent {
         flex-direction: column;
