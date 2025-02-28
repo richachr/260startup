@@ -58,5 +58,4 @@ function NotFound() {
 
 // Intensive
 // TODO: Scheduler logic
-// TODO: Notifications random messages.
-// TODO: Doctor list fetching for appointment creation and display, mutual appearance and deletion, primary name
+// TODO: Doctor list fetching for primary name, mutual appearance and deletion
