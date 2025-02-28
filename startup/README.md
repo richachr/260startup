@@ -98,7 +98,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **All functionality implemented or mocked out** - I added all functionality necessary in the base app, including appointment creation and saving, scheduling based on urgency, login/logout, doctor/patient separation and authentication, showing more info/deleting appointments locally, exporting appointments,, saving/processing forms, and appointment creation syncing between doctors and patients. Some features, such as the full export to iCal, more detailed notifications, ChatGPT integration, and live deletion syncing require a backend/service to do properly, so those functionalities may be mocked out or take time to update.
+- [x] **All functionality implemented or mocked out** - I added all functionality necessary in the base app, including appointment creation and saving, notifications, scheduling based on urgency, login/logout, doctor/patient separation and authentication, showing more info/deleting appointments locally, exporting appointments,, saving/processing forms, and appointment creation syncing between doctors and patients. Some features, such as the full export to iCal, more detailed notifications, ChatGPT integration, and live deletion syncing require a backend/service to do properly, so those functionalities may be mocked out or take time to update.
 
 ***YOU MUST CREATE A DOCTOR ACCOUNT BEFORE A PATIENT ACCOUNT IN ORDER FOR APPOINTMENT SCHEDULING TO WORK. OTHERWISE, THE APPOINTMENT SYNCING WILL CAUSE AN ERROR.***
 
