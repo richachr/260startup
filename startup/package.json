@@ -20,11 +20,9 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "bcryptjs": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^5.0.0",
-    "react-router-dom": "^7.1.5",
-    "uuid": "^11.1.0"
+    "react-router-dom": "^7.1.5"
   }
 }
