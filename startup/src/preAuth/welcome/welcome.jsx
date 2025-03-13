@@ -35,20 +35,23 @@ export function Login(props) {
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!localStorage.getItem(email)) {
-            alert('No account found with the associated email. Please create an account.');
-            navigate('/create-account');
+        setPassword(await bcrypt.hash(password,10));
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            body: JSON.stringify({"email": email, "hashedPassword": password}),
+            headers: {
+                "Content-type": 'application/json;' // May need UTF-8 Encoding.
+            }
+        })
+        if(!response?.ok) {
+            alert(response.body.error);
+            if(response.status===404) {
+                navigate('/create-account')
+            }
             return;
         }
-        let hash = JSON.parse(localStorage.getItem(email)).hashedPassword;
-        if (await bcrypt.compare(password, hash)) {
-            let name = JSON.parse(localStorage.getItem(email)).name;
-            props.onLoginChange(true, email, name);
-            navigate('/appointments');
-        } else {
-            alert('Password incorrect.');
-            return;
-        }
+        props.onLoginChange(true, email, name);
+        navigate('/appointments');
     }
     return (
         <div className="mainRightContent">
@@ -99,6 +102,9 @@ export function CreateAccount(props) {
         });
         if(!response?.ok) {
             alert(response.body.error);
+            if(response.status===409) {
+                navigate('/login')
+            }
         }
         props.onLoginChange(true, email, name)
         navigate("/appointments");
