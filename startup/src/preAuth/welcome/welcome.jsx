@@ -85,20 +85,20 @@ export function CreateAccount(props) {
             alert(`One or more fields are empty. Please fill them in and resubmit.`);
             return;
         }
-        if (localStorage.getItem(email)) {alert('That account already exists.'); return;}
-        if (doctorStatus) {
-            let currentDoctors = localStorage.getItem("doctors") ? JSON.parse(localStorage.getItem("doctors")) : {}
-            currentDoctors[email] = name;
-            localStorage.setItem("doctors",JSON.stringify(currentDoctors));
-        }
         try {
             const hash = await bcrypt.hash(password, 10);
-            localStorage.setItem(email, JSON.stringify({ "name": name, "email": email, "dateOfBirth": dateOfBirth, "hashedPassword": hash, "appointments": [] }));
         } catch (err) {
             console.error(`Error: ${err}`);
         }
-        if (!(localStorage.getItem(email))) {
-            localStorage.setItem(email, JSON.stringify({ "name": name }));
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            body: JSON.stringify({ "name": name, "email": email, "doctorStatus": doctorStatus, "dateOfBirth": dateOfBirth, "hashedPassword": hash, "appointments": [] }),
+            headers: {
+                "Content-type": 'application/json;' // May need UTF-8 Encoding.
+            }
+        });
+        if(!response?.ok) {
+            alert(response.body.error);
         }
         props.onLoginChange(true, email, name)
         navigate("/appointments");
