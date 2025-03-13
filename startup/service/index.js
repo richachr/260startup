@@ -10,10 +10,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
 
-var apiRouter = express.Router();
+const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-let users = {"test@test.test": {
+let users = [{
     "name": "test",
     "email": "test@test.test",
     "dateOfBirth": "2025-02-26",
@@ -41,12 +41,30 @@ let users = {"test@test.test": {
     "gender": "Male",
     "phone": "8018018011",
     "address": "9 Heritage Halls #4104"
-}};
+}];
 let doctors = {};
 
+async function userExists(userName) {
+    if(userName && users.some((user) => {return user.email===userName;})) {
+        return true;
+    }
+    return false;
+}
 
+apiRouter.post('/register', async (req, res) => {
+    const userData = req.body;
+    if(await userExists(userData.email)) {
+        return res.status(409).send({error: "That user already exists. Please log in instead."})
+    }
+    if(Object.values(userData).some(value => value==="")) {
+        return res.status(400).send({error: "One or more fields are empty. Please fill them in and resubmit."})
+    }
+    if(userData.doctorStatus) {
+        doctors[userData.email] = userData.name;
+    }
+})
 
-app.listen(port, () => {
+app.listen(4000, () => {
     console.log("Webserver started.")
 })
 
@@ -56,7 +74,7 @@ app.listen(port, () => {
 //TODO: Logout Endpoint
 //TODO: Change login state to middleware checking?
 //TODO: Authentication Endpoint
-//TODO: Add appointments to schedules for user and doctor.
+//TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
 //TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
 //TODO: Move Doctors list to backend, make frontend a wrapper for endpoint.
 //TODO: GetUserData Endpoint, SetUserData endpoint
