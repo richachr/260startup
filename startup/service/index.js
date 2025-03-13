@@ -51,6 +51,10 @@ async function userExists(userName) {
     return false;
 }
 
+function getValue(userName,key) {
+    return users.find((user) => user.email===userName)[key];
+}
+
 apiRouter.post('/register', async (req, res) => {
     const userData = req.body;
     if(await userExists(userData.email)) {
@@ -62,15 +66,39 @@ apiRouter.post('/register', async (req, res) => {
     if(userData.doctorStatus) {
         doctors[userData.email] = userData.name;
     }
+    try {
+        userData.hashedPassword = await bcrypt.hash(userData.hashedPassword, 10);
+    } catch (err) {
+        console.error(`Error: ${err}`);
+    }
+    users.push(userData);
+    return res.status(201).send({userName: userData.email});
+})
+
+apiRouter.post('/login', async (req,res) => {
+    const loginData = req.body;
+    let enteredPassword;
+    if(!await userExists(loginData.email)) {
+        return res.status(404).send({error: "No user found with that email. Please create an account."})
+    }
+    try {
+        enteredPassword = await bcrypt.hash(loginData.hashedPassword, 10);
+    } catch (err) {
+        console.error(`Error: ${err}`);
+    }
+    const storedPassword = getValue(loginData.email,hashedPassword);
+    if(await bcrypt.compare(enteredPassword, storedPassword)) {
+        return res.status(200).send({userName: loginData.email});
+    } else {
+        return res.status(401).send({error: "Incorrect password."});
+    }
 })
 
 app.listen(4000, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Registration Endpoint - doctors list, check if exists, store user info.
-//TODO: Login Endpoint - check if exists, cookie auth token, 
-//TODO: FindUser Endpoint
+//TODO: Cookie auth token for registration and login
 //TODO: Logout Endpoint
 //TODO: Change login state to middleware checking?
 //TODO: Authentication Endpoint
@@ -81,4 +109,3 @@ app.listen(4000, () => {
 //TODO: Export Appointments Endpoint: 3rd party service on backend
 //TODO: Move FetchAppts and DeleteAppts to backend.
 //TODO: Move form validation to backend?
-//TODO: Double hash passwords
