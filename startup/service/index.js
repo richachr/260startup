@@ -98,7 +98,7 @@ app.listen(4000, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Cookie auth token for registration and login
+//TODO: Cookie auth token for registration and login, userName cookie
 //TODO: Logout Endpoint
 //TODO: Change login state to middleware checking?
 //TODO: Authentication Endpoint
