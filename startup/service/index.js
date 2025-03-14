@@ -89,10 +89,12 @@ const checkAuth = async (req,res,next) => {
 apiRouter.post('/register', async (req, res) => {
     const userData = req.body;
     if(await userExists(userData.email)) {
-        return res.status(409).send({error: "That user already exists. Please log in instead."})
+        res.status(409).send({error: "That user already exists. Please log in instead."})
+        return;
     }
     if(Object.values(userData).some(value => value==="")) {
-        return res.status(400).send({error: "One or more fields are empty. Please fill them in and resubmit."})
+        res.status(400).send({error: "One or more fields are empty. Please fill them in and resubmit."})
+        return;
     }
     if(userData.doctorStatus) {
         doctors[userData.email] = userData.name;
@@ -104,14 +106,15 @@ apiRouter.post('/register', async (req, res) => {
     }
     users.push(userData);
     setCookies(res,userData.email);
-    return res.status(201).send({userName: userData.email});
+    res.status(201).send({userName: userData.email});
 })
 
 apiRouter.post('/login', async (req,res) => {
     const loginData = req.body;
     let enteredPassword;
     if(!await userExists(loginData.email)) {
-        return res.status(404).send({error: "No user found with that email. Please create an account."})
+        res.status(404).send({error: "No user found with that email. Please create an account."});
+        return;
     }
     try {
         enteredPassword = await bcrypt.hash(loginData.hashedPassword, 10);
@@ -121,9 +124,11 @@ apiRouter.post('/login', async (req,res) => {
     const storedPassword = getValue(loginData.email,hashedPassword);
     if(bcrypt.compare(enteredPassword, storedPassword)) {
         setCookies(res,loginData.email);
-        return res.status(200).send({userName: loginData.email});
+        res.status(200).send({userName: loginData.email});
+        return;
     } else {
-        return res.status(401).send({error: "Incorrect password."});
+        res.status(401).send({error: "Incorrect password."});
+        return;
     }
 })
 
@@ -132,15 +137,29 @@ apiRouter.delete('/logout', async (req,res) => {
     setValue(userName,'authToken',undefined);
     res.clearCookie('authToken');
     res.clearCookie('userName');
-    return res.sendStatus(204);
+    res.sendStatus(204);
 })
 
-app.listen(4000, () => {
+apiRouter.get('/data/get', checkAuth, async (req,res) => {
+    const key = req.body.key;
+    const userName = req.cookies.userName;
+    let result = {};
+    if(typeof key==="object") {
+        key.forEach(element => {
+            result[element] = getValue(userName,element);
+        });
+    } else {
+        result[key] = getValue(userName,key);
+    }
+    res.send(result);
+})
+
+app.listen(port, () => {
     console.log("Webserver started.")
 })
 
 //TODO: Change login state to middleware checking?
-//TODO: Authentication Endpoint
+//TODO: Use Authentication Endpoint for sensetive calls.
 //TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
 //TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
 //TODO: Make frontend doctors on create a wrapper for endpoint.
