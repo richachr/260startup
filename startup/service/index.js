@@ -55,6 +55,25 @@ function getValue(userName,key) {
     return users.find((user) => user.email===userName)[key];
 }
 
+function setValue(userName,key,value) {
+    users.find((user) => user.email===userName)[key] = value;
+}
+
+function setCookies(res,userName) {
+    res.cookie('authToken', uuid.v4(), {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 3600000
+    })
+    res.cookie('userName', userName, {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 3600000
+    })
+}
+
 apiRouter.post('/register', async (req, res) => {
     const userData = req.body;
     if(await userExists(userData.email)) {
@@ -72,6 +91,7 @@ apiRouter.post('/register', async (req, res) => {
         console.error(`Error: ${err}`);
     }
     users.push(userData);
+    setCookies(res,userData.email);
     return res.status(201).send({userName: userData.email});
 })
 
@@ -87,7 +107,8 @@ apiRouter.post('/login', async (req,res) => {
         console.error(`Error: ${err}`);
     }
     const storedPassword = getValue(loginData.email,hashedPassword);
-    if(await bcrypt.compare(enteredPassword, storedPassword)) {
+    if(bcrypt.compare(enteredPassword, storedPassword)) {
+        setCookies(res,loginData.email);
         return res.status(200).send({userName: loginData.email});
     } else {
         return res.status(401).send({error: "Incorrect password."});
@@ -104,7 +125,7 @@ app.listen(4000, () => {
 //TODO: Authentication Endpoint
 //TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
 //TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
-//TODO: Move Doctors list to backend, make frontend a wrapper for endpoint.
+//TODO: Make frontend doctors on create a wrapper for endpoint.
 //TODO: GetUserData Endpoint, SetUserData endpoint
 //TODO: Export Appointments Endpoint: 3rd party service on backend
 //TODO: Move FetchAppts and DeleteAppts to backend.
