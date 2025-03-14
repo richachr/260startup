@@ -60,7 +60,9 @@ function setValue(userName,key,value) {
 }
 
 function setCookies(res,userName) {
-    res.cookie('authToken', uuid.v4(), {
+    const token = uuid.v4();
+    setValue(userName, 'authToken', token)
+    res.cookie('authToken', token, {
         secure: true,
         httpOnly: true,
         sameSite: 'strict',
@@ -115,11 +117,15 @@ apiRouter.post('/login', async (req,res) => {
     }
 })
 
+apiRouter.delete('/logout', async (req,res) => {
+    res.clearCookie('authToken');
+    res.clearCookie('userName');
+})
+
 app.listen(4000, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Cookie auth token for registration and login, userName cookie
 //TODO: Logout Endpoint
 //TODO: Change login state to middleware checking?
 //TODO: Authentication Endpoint
