@@ -76,6 +76,16 @@ function setCookies(res,userName) {
     })
 }
 
+const checkAuth = async (req,res,next) => {
+    const userName = req.cookies.userName;
+    const currentToken = req.cookies.authToken;
+    if(getValue(userName,'authToken')===currentToken) {
+        next();
+    } else {
+        res.status(401).send({msg: 'Authentication failed. Please log in again.'})
+    }
+}
+
 apiRouter.post('/register', async (req, res) => {
     const userData = req.body;
     if(await userExists(userData.email)) {
@@ -118,15 +128,17 @@ apiRouter.post('/login', async (req,res) => {
 })
 
 apiRouter.delete('/logout', async (req,res) => {
+    const userName = req.cookies['userName'];
+    setValue(userName,'authToken',undefined);
     res.clearCookie('authToken');
     res.clearCookie('userName');
+    return res.sendStatus(204);
 })
 
 app.listen(4000, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Logout Endpoint
 //TODO: Change login state to middleware checking?
 //TODO: Authentication Endpoint
 //TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
