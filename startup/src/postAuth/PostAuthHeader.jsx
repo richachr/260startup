@@ -33,7 +33,7 @@ function NotificationsBlock(props) {
     )
 }
 
-const authCheckName = async () => {
+async function authCheckName() {
     const navigate = useNavigate();
     const response = await fetch('/api/data/get', {
         method: 'POST',
@@ -52,7 +52,17 @@ const authCheckName = async () => {
     return response.body.name;
 }
 
-export default function PostAuthHeader(props) {
+async function logout() {
+    await fetch('/api/logout', {
+        method: 'DELETE',
+        body: null,
+        headers: {
+            "Content-type": 'application/json;' // May need UTF-8 Encoding.
+        }
+    });
+}
+
+export default function PostAuthHeader() {
     const navigate = useNavigate();
     let name;
     useEffect(() => {
@@ -67,7 +77,7 @@ export default function PostAuthHeader(props) {
                 <div className="rightContent" id='postAuth'>
                     <nav>
                         <button className="secondary" onClick={showNotifications}><FontAwesomeIcon icon={faBell} className='fontAwesome' style={{position: 'relative'}}/></button>
-                        <button className="danger" onClick={() => {props.onLoginChange(false,"",""); navigate('/')}}><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button>
+                        <button className="danger" onClick={() => {logout(); navigate('/')}}><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button>
                         <h5>Hey there, {name}!</h5>
                     </nav>
                     <NotificationsBlock />
