@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import { faCalendarPlus, faCalendarXmark, faFileLines, faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faCalendarPlus, faFileLines, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 function exportAppointments(userName) {
     const userData = JSON.parse(localStorage.getItem(userName));
@@ -16,9 +16,22 @@ function exportAppointments(userName) {
     tempLink.remove();
 }
 
-function fetchAppointments(userName) {
-    const userData = JSON.parse(localStorage.getItem(userName));
-    return userData.appointments;
+async function fetchAppointments() {
+    const response = await fetch('/api/data/get', {
+        method: 'POST',
+        body: JSON.stringify({"key": "appointments"}),
+        headers: {
+            "Content-type": 'application/json;' // May need UTF-8 Encoding.
+        }
+    });
+    if(!response?.ok) {
+        alert(response.body.error);
+        if(response.status===401) {
+            navigate('/login')
+        }
+        return;
+    }
+    return response.body.appointments;
 }
 
 function AppointmentsBlock(props) {
@@ -45,33 +58,18 @@ function showInfo(id) {
     }
 }
 
-function deleteAppointment(id,userName,doctor,setAppointments) {
-    let userData = JSON.parse(localStorage.getItem(userName));
-    let userAppointments = userData.appointments;
-    let doctorData = JSON.parse(localStorage.getItem(doctor));
-    let doctorAppointments = doctorData.appointments;
-    console.log(userAppointments);
-    console.log(doctorAppointments);
-    let newUserAppointments = [];
-    let newDoctorAppointments = [];
-    userAppointments.forEach(element => {
-        if (Object.keys(element)[0] !== id) {
-            newUserAppointments.push(element);
+async function deleteAppointment(id,doctor,setAppointments) {
+    const response = await fetch('/api/appointments/delete', {
+        method: 'DELETE',
+        body: {
+            "id": id,
+            "doctor": doctor
+        },
+        headers: {
+            "Content-type": 'application/json;'
         }
-    });
-    doctorAppointments.forEach(element => {
-        if (Object.keys(element)[0] !== id) {
-            newDoctorAppointments.push(element);
-        }
-    });
-    console.log(newUserAppointments);
-    console.log(newDoctorAppointments);
-    setAppointments(newUserAppointments);
-    userData.appointments = newUserAppointments;
-    doctorData.appointments = newDoctorAppointments;
-    localStorage.setItem(userName,JSON.stringify(userData));
-    localStorage.setItem(doctor,JSON.stringify(doctorData));
-    return;
+    })
+    setAppointments(response.body.updatedAppointments);
 }
 
 function Appointment({data, userName, onAppointmentsChange}) {
@@ -100,7 +98,7 @@ function Appointment({data, userName, onAppointmentsChange}) {
             </div>
             <div className="apptActions">
                 <button className="secondary" onClick={() => showInfo(idValue)}><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                <button className="danger" onClick={() => deleteAppointment(idValue,userName,apptInfo.doctor,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
+                <button className="danger" onClick={() => deleteAppointment(idValue,apptInfo.doctor,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
             </div>
         </div>
     )
@@ -110,11 +108,11 @@ export function Appointments(props) {
     const [appointments, setAppointments] = React.useState(fetchAppointments(props.userName));
 
     useEffect(() => {
-        const newAppointments = fetchAppointments(props.userName);
+        const newAppointments = fetchAppointments();
         if (JSON.stringify(newAppointments) !== JSON.stringify(appointments)) {
             setAppointments(newAppointments);
         }
-    },[props.userName,appointments]);
+    },[appointments]);
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="docs-together.png" alt="Doctors" />
