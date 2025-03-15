@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
 const app = express();
+const openai = require('openai');
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -13,7 +14,7 @@ app.use(express.static('public'));
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-let users = [{
+let users = {"test@test.test": {
     "name": "test",
     "email": "test@test.test",
     "dateOfBirth": "2025-02-26",
@@ -41,22 +42,22 @@ let users = [{
     "gender": "Male",
     "phone": "8018018011",
     "address": "9 Heritage Halls #4104"
-}];
+}};
 let doctors = {"james.howard@ihc.org": "James Howard"};
 
 async function userExists(userName) {
-    if(userName && users.some((user) => {return user.email===userName;})) {
+    if(userName && userName in Object.keys(users)) {
         return true;
     }
     return false;
 }
 
 function getValue(userName,key) {
-    return users.find((user) => user.email===userName)[key];
+    return users[userName][key];
 }
 
 function setValue(userName,key,value) {
-    users.find((user) => user.email===userName)[key] = value;
+    users[userName][key] = value;
 }
 
 function setCookies(res,userName) {
@@ -86,6 +87,20 @@ const checkAuth = async (req,res,next) => {
     }
 }
 
+function determineSchedulingClass(apptData) {
+    const pain = +Object.values(apptData)[0].painLevel;
+    const urgency = +Object.values(apptData)[0].urgencyLevel;
+    const seriousness = +Object.values(apptData)[0].seriousness;
+    return Math.ceil((pain+urgency+seriousness)/3);
+}
+
+function getChatgptResponse(apptData) {
+    query = `Given the symptoms: ${apptData.symptoms}, give a ranking of the probable severity of these symptoms from 1-10 with 1 being the lowest and 10 the highest, and give the most probably diagnosis. Give only one number separated from the diagnosis with a comma, and give only the number and condition, with no extra words or commentary.`
+    apptData.diagnosis = "Needs medical care."
+    Object.values(apptData)[0].seriousness = 5
+    return apptData;
+}
+
 apiRouter.post('/register', async (req, res) => {
     const userData = req.body;
     if(await userExists(userData.email)) {
@@ -104,7 +119,7 @@ apiRouter.post('/register', async (req, res) => {
     } catch (err) {
         console.error(`Error: ${err}`);
     }
-    users.push(userData);
+    users[userData.email] = userData;
     setCookies(res,userData.email);
     res.status(201).send({userName: userData.email});
 })
@@ -167,7 +182,7 @@ apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
-    let result = users.find((user) => user.email===userName);
+    let result = users[userName];
     delete result.hashedPassword;
     res.status(200).send(result);
 })
@@ -186,14 +201,30 @@ apiRouter.get('/data/get', checkAuth, async (req,res) => {
     res.send(result);
 })
 
+apiRouter.put('/appointments/create', checkAuth, async (req,res) => {
+    const appointmentData = req.body.appointmentData;
+    const userName = req.cookies.userName;
+    if (Object.values(appointmentData).some((value) => (value === "" || value === undefined))) {
+        res.status(400).send({error: 'One or more of the fields are empty. Please check your response and resubmit.'})
+        return;
+    }
+    if (appointmentData.name===getValue(userName,'name') && dateOfBirth===getValue(userName,'dateOfBirth')) {
+        setValue(userName,'gender',appointmentData.gender);
+        setValue(userName,'phone',appointmentData.phone);
+        setValue(userName,'address',appointmentData.address)
+    }
+    let userAppointments = getValue(userName,'appointments');
+    userAppointments.push({[req.body.appointmentID]:appointmentData});
+    setValue(userName,'appointments',userAppointments);
+    res.sendStatus(204);
+})
+
 app.listen(port, () => {
     console.log("Webserver started.")
 })
 
 //TODO: Use Authentication Endpoint for sensitive calls.
-//TODO: Doctor/patient names on appts page
-//TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
+//TODO: Add appointments to schedules for user and doctor.
 //TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
 //TODO: SetUserData endpoint?
-//TODO: Export Appointments: Not using API, implement serverside?
 //TODO: Move form validation to backend?
