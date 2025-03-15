@@ -13,9 +13,6 @@ import { Scheduler } from './postAuth/scheduler/scheduler';
 
 export default function App() {
     const [userName, setUserName] = React.useState(undefined);
-    const currentLoginState = userName ? true : false;
-    const [loginState, setLoginState] = React.useState(currentLoginState);
-    const [name, setName] = React.useState('');
     const [currentApptId, setCurrentApptId] = React.useState(null);
     const [currentApptData, setCurrentApptData] = React.useState(null);
 
@@ -25,12 +22,12 @@ export default function App() {
                 <Route element={<PreAuthHeader />}>
                     <Route path='/' element={<Homepage />} exact>
                         <Route index element={<Welcome />} />
-                        <Route path='/login' element={<Login onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>} />
-                        <Route path='/create-account' element={<CreateAccount onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>} />
+                        <Route path='/login' element={<Login />} />
+                        <Route path='/create-account' element={<CreateAccount />} />
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
-                <Route element={<PostAuthHeader loginState={loginState} name={name} userName={userName} onLoginChange={(loginState,userName,name) => {setLoginState(loginState); setUserName(userName); setName(name);}}/>}>
+                <Route element={<PostAuthHeader />}>
                     <Route path='/appointments' element={<Appointments userName={userName}/>} />
                     <Route path='/create-appointment' element={<CreateAppointment userName={userName} currentApptId={currentApptId} currentApptData={currentApptData} onCurrentApptChange={(currentApptId,currentApptData) => {setCurrentApptId(currentApptId); setCurrentApptData(currentApptData)}}/>} />
                     <Route path='/scheduler' element={<Scheduler userName={userName} currentApptId={currentApptId} currentApptData={currentApptData} onCurrentApptChange={(currentApptId,currentApptData) => {setCurrentApptId(currentApptId); setCurrentApptData(currentApptData)}}/>} />
