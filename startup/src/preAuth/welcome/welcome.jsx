@@ -29,7 +29,7 @@ export function Welcome() {
     )
 }
 
-export function Login() {
+export function Login(props) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const navigate = useNavigate();
@@ -50,6 +50,7 @@ export function Login() {
             }
             return;
         }
+        props.onLoginChange(response.body.userName);
         navigate('/appointments');
     }
     return (
@@ -69,7 +70,7 @@ export function Login() {
     )
 }
 
-export function CreateAccount() {
+export function CreateAccount(props) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [checkPassword, setCheck] = React.useState("");
@@ -105,6 +106,7 @@ export function CreateAccount() {
                 navigate('/login')
             }
         }
+        props.onLoginChange(response.body.userName);
         navigate("/appointments");
     }
 
