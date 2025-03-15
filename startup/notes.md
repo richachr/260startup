@@ -26,7 +26,7 @@ Special characters: & &amp;, < &lt;, > &gt;, " &quot;, ' &apos;, 😀 &#128512;
 
 Div is a block, span is inline. Heading goes from 1-9. a tags can be called 'anchor'.
 
-Deploy: ./deployReact.sh -k ~/CS260/encrypted/260keypair.pem -h rappt.click -s simon
+Deploy: ./deployService.sh -k ~/CS260/encrypted/260keypair.pem -h rappt.click -s simon
 
 ## JS Notes
 
