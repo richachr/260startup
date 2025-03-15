@@ -38,7 +38,7 @@ function AppointmentsBlock(props) {
     return (
         <div className="appointments">
             {(!(props.appointments.length === 0)) ? props.appointments.map((value) => {
-                return <Appointment data={value} key={Object.keys(value)[0]} userName={props.userName} onAppointmentsChange={props.onAppointmentsChange} />;
+                return <Appointment data={value} key={Object.keys(value)[0]} userName={props.userName} doctors={props.doctors} onAppointmentsChange={props.onAppointmentsChange} />;
             }) : <div className="appointment"><h4>No appointments found.</h4></div>}
         </div>
     )
@@ -72,14 +72,14 @@ async function deleteAppointment(id,doctor,setAppointments) {
     setAppointments(response.body.updatedAppointments);
 }
 
-function Appointment({data, userName, onAppointmentsChange}) {
+function Appointment({data, userName, doctors, onAppointmentsChange}) {
     const apptInfo = Object.values(data)[0];
     const idValue = Object.keys(data)[0];
     
     return (
         <div className="appointment" id={idValue}>
             <div className="denseInfoContainer">
-                <span>{apptInfo.doctor===userName ? apptInfo.name : JSON.parse(localStorage.getItem("doctors"))[apptInfo.doctor]}</span>
+                <span>{apptInfo.doctor===userName ? apptInfo.name : doctors[apptInfo.doctor]}</span>
                 <span>{apptInfo.time ? apptInfo.time : "Unscheduled"}</span>
                 <div className="additionalApptInfo" style={{width: 0, height: 0}}>
                     <p>Patient Name: {apptInfo.name}</p>
@@ -108,11 +108,14 @@ export function Appointments(props) {
     const [appointments, setAppointments] = React.useState(fetchAppointments(props.userName));
 
     useEffect(() => {
+        // Is this necessary?
         const newAppointments = fetchAppointments();
         if (JSON.stringify(newAppointments) !== JSON.stringify(appointments)) {
             setAppointments(newAppointments);
         }
     },[appointments]);
+
+    const doctors = fetch('/api/doctors',{method: "GET"}).body;
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="docs-together.png" alt="Doctors" />
@@ -121,7 +124,7 @@ export function Appointments(props) {
                 <NavLink to="/create-appointment"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></NavLink>
                 <button className="secondary" onClick={() => exportAppointments(props.userName)}><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
             </div>
-            <AppointmentsBlock userName={props.userName} appointments={appointments} onAppointmentsChange={(newAppointments) => setAppointments(newAppointments)} />
+            <AppointmentsBlock userName={props.userName} appointments={appointments} doctors={doctors} onAppointmentsChange={(newAppointments) => setAppointments(newAppointments)} />
         </div>
     );
 }
