@@ -82,7 +82,7 @@ const checkAuth = async (req,res,next) => {
     if(getValue(userName,'authToken')===currentToken) {
         next();
     } else {
-        res.status(401).send({msg: 'Authentication failed. Please log in again.'})
+        res.status(401).send({error: 'Authentication failed. Please log in again.'})
     }
 }
 
@@ -140,6 +140,27 @@ apiRouter.delete('/logout', async (req,res) => {
     res.sendStatus(204);
 })
 
+apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
+    const userName = req.cookies['userName'];
+    let userAppointments = getValue(userName,'appointments');
+    let doctorAppointments = getValue(req.body.doctor,'appointments');
+    let newUserAppointments = [];
+    let newDoctorAppointments = [];
+    userAppointments.forEach(element => {
+        if (Object.keys(element)[0] !== id) {
+            newUserAppointments.push(element);
+        }
+    });
+    doctorAppointments.forEach(element => {
+        if (Object.keys(element)[0] !== id) {
+            newDoctorAppointments.push(element);
+        }
+    });
+    setValue(userName,'appointments',newUserAppointments);
+    setValue(req.body.doctor,'appointments',newDoctorAppointments);
+    res.status(200).send({'updatedAppointments': newUserAppointments});
+})
+
 apiRouter.get('/data/get', checkAuth, async (req,res) => {
     const key = req.body.key;
     const userName = req.cookies.userName;
@@ -158,12 +179,12 @@ app.listen(port, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Change login state to middleware checking?
-//TODO: Use Authentication Endpoint for sensetive calls.
+//TODO: Use Authentication Endpoint for sensitive calls.
+//TODO: Doctor/patient names on appts page
+//TODO: Add userName state back to login/create?
 //TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
 //TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
 //TODO: Make frontend doctors on create a wrapper for endpoint.
-//TODO: GetUserData Endpoint, SetUserData endpoint
+//TODO: SetUserData endpoint?
 //TODO: Export Appointments Endpoint: 3rd party service on backend
-//TODO: Move FetchAppts and DeleteAppts to backend.
 //TODO: Move form validation to backend?
