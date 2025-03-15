@@ -33,12 +33,30 @@ function NotificationsBlock(props) {
     )
 }
 
+const authCheckName = async () => {
+    const navigate = useNavigate();
+    const response = await fetch('/api/data/get', {
+        method: 'POST',
+        body: JSON.stringify({"key": "name"}),
+        headers: {
+            "Content-type": 'application/json;' // May need UTF-8 Encoding.
+        }
+    });
+    if(!response?.ok) {
+        alert(response.body.error);
+        if(response.status===401) {
+            navigate('/login')
+        }
+        return;
+    }
+    return response.body.name;
+}
+
 export default function PostAuthHeader(props) {
     const navigate = useNavigate();
+    let name;
     useEffect(() => {
-        if (!props.loginState) {
-            navigate('/login');
-        }
+        name = authCheckName();
     },[]);
     return (
         <div className="reactContent">
@@ -50,13 +68,13 @@ export default function PostAuthHeader(props) {
                     <nav>
                         <button className="secondary" onClick={showNotifications}><FontAwesomeIcon icon={faBell} className='fontAwesome' style={{position: 'relative'}}/></button>
                         <button className="danger" onClick={() => {props.onLoginChange(false,"",""); navigate('/')}}><FontAwesomeIcon icon={faArrowRightFromBracket} className='fontAwesome' /></button>
-                        <h5>Hey there, {props.name}!</h5>
+                        <h5>Hey there, {name}!</h5>
                     </nav>
                     <NotificationsBlock />
                 </div>
             </header>
             <main>
-                <ErrorBoundary fallback={<div className='mainContent' id='postAuth'><h1>Something went wrong.</h1></div>} onReset={() => navigate('/')} onError={() => navigate('/')}>
+                <ErrorBoundary fallback={<div className='mainContent' id='postAuth'><h1>Something went wrong.</h1></div>} onReset={() => navigate('/appointments')} onError={() => navigate('/appointments')}>
                     <Outlet />
                 </ErrorBoundary>
             </main>
