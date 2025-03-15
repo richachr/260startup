@@ -42,7 +42,7 @@ let users = [{
     "phone": "8018018011",
     "address": "9 Heritage Halls #4104"
 }];
-let doctors = {};
+let doctors = {"james.howard@ihc.org": "James Howard"};
 
 async function userExists(userName) {
     if(userName && users.some((user) => {return user.email===userName;})) {
@@ -161,6 +161,17 @@ apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
     res.status(200).send({'updatedAppointments': newUserAppointments});
 })
 
+apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
+    res.status(200).send(doctors);
+})
+
+apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
+    const userName = req.cookies.userName;
+    let result = users.find((user) => user.email===userName);
+    delete result.hashedPassword;
+    res.status(200).send(result);
+})
+
 apiRouter.get('/data/get', checkAuth, async (req,res) => {
     const key = req.body.key;
     const userName = req.cookies.userName;
@@ -181,10 +192,8 @@ app.listen(port, () => {
 
 //TODO: Use Authentication Endpoint for sensitive calls.
 //TODO: Doctor/patient names on appts page
-//TODO: Add userName state back to login/create?
 //TODO: Add appointments to schedules for user and doctor. Add user email to appt data.
 //TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
-//TODO: Make frontend doctors on create a wrapper for endpoint.
 //TODO: SetUserData endpoint?
-//TODO: Export Appointments Endpoint: 3rd party service on backend
+//TODO: Export Appointments: Not using API, implement serverside?
 //TODO: Move form validation to backend?
