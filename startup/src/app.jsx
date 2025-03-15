@@ -22,8 +22,8 @@ export default function App() {
                 <Route element={<PreAuthHeader />}>
                     <Route path='/' element={<Homepage />} exact>
                         <Route index element={<Welcome />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/create-account' element={<CreateAccount />} />
+                        <Route path='/login' element={<Login onLoginChange={(newUserName) => setUserName(newUserName)}/>} />
+                        <Route path='/create-account' element={<CreateAccount onLoginChange={(newUserName) => setUserName(newUserName)}/>} />
                     </Route>
                     <Route path='/not-found' element={<NotFound />} />
                 </Route>
