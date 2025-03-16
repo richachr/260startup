@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
 
 function DoctorsInput(props) {
-    const doctors = localStorage.getItem("doctors") ? JSON.parse(localStorage.getItem("doctors")) : {"james.howard@ihc.org": "James Howard"};
+    const doctors = fetch('/api/doctors',{method: "GET"}).body;
     return (
         <select name="doctor" id="doctor" defaultValue={props.doctor} onChange={(e) => props.setDoctor(e.target.value)}>
             <option></option>
@@ -18,7 +18,7 @@ function DoctorsInput(props) {
 
 export function CreateAppointment(props) {
     const navigate = useNavigate();
-    let userData = JSON.parse(localStorage.getItem(props.userName));
+    let userData = fetch('/api/data/get/all', {method: "GET"}).body;
     const savedData = props.currentApptData ? Object.values(props.currentApptData)[0] : {};
     const [name,setName] = useState(savedData.name ? savedData.name : userData.name);
     const [dateOfBirth, setDateOfBirth] = useState(savedData.dateOfBirth ? savedData.dateOfBirth : userData.dateOfBirth);
@@ -34,8 +34,9 @@ export function CreateAppointment(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const appointmentID = props.currentApptId ? props.currentApptId : uuid();
-        const appointmentData = {[appointmentID]: {
+        const appointmentData = {
             name: name,
+            patientEmail: props.userName,
             dateOfBirth: dateOfBirth,
             gender: gender,
             phone: phone,
@@ -45,24 +46,18 @@ export function CreateAppointment(props) {
             painLevel: painLevel,
             urgencyLevel: urgencyLevel,
             symptoms: symptoms
-        }};
-        if (Object.values(appointmentData[appointmentID]).some((value) => (value === "" || value === undefined))) {
-            alert('One or more of the fields are empty. Please check your response and resubmit.')
-            return;
-        }
-        if (name===userData.name && dateOfBirth===userData.dateOfBirth) {
-            if(!userData.gender) {
-                userData.gender = gender;
+        };
+        fetch('/api/appointments/create', {
+            method: "POST",
+            body: {
+                'appointmentID': appointmentID,
+                'appointmentData': appointmentData
+            },
+            headers: {
+                "Content-type": 'application/json;'
             }
-            if(!userData.phone) {
-                userData.phone = phone;
-            }
-            if(!userData.address) {
-                userData.address = address;
-            }
-        }
+        })
         props.onCurrentApptChange(appointmentID,appointmentData);
-        localStorage.setItem(props.userName,JSON.stringify(userData));
         navigate('/scheduler')
     }
 
