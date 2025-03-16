@@ -5,7 +5,13 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 function TimesAvailable({onTimeSelect,schedulingClass}) {
     const [offset, setOffset] = React.useState(0);
-    const [apptOptions, setApptOptions] = React.useState(getAppointmentTimes(schedulingClass,offset));
+    const [apptOptions, setApptOptions] = React.useState([]);
+    useEffect(() => {
+        const getTimes = async () => {
+            setApptOptions(await getAppointmentTimes(schedulingClass,offset));
+        }
+        getTimes()
+    },[schedulingClass,offset])
     return (
         <fieldset className="fieldset" onChange={(e) =>onTimeSelect(e.target.value)}>
             {apptOptions.map((value,index) => { return(
@@ -14,7 +20,7 @@ function TimesAvailable({onTimeSelect,schedulingClass}) {
                 </div>
             )})}
             <div className="actions">
-                <button type="button" onClick={() => {setOffset(offset+3); setApptOptions(schedulingClass,offset)}} className="secondary"><span>Show more times</span></button>
+                <button type="button" onClick={() => {setOffset((prev) => prev+3);}} className="secondary"><span>Show more times</span></button>
             </div>
         </fieldset>
     )
@@ -23,10 +29,10 @@ function TimesAvailable({onTimeSelect,schedulingClass}) {
 async function updateApptData(currentApptId,currentApptData) {
     const response = await fetch('/api/appoointments/schedule/getSchedule',{
         method: "POST",
-        body: {
+        body: JSON.stringify({
             'appointmentId': currentApptId,
             'appointmentData': currentApptData
-        },
+        }),
         headers: {
             "Content-type": 'application/json;'
         }
@@ -37,7 +43,7 @@ async function updateApptData(currentApptId,currentApptData) {
 async function getAppointmentTimes(schedulingClass,offset) {
     const response = await fetch('/api/appointments/schedule/getTimes', {
         method: "POST",
-        body: {'offset': offset, 'schedulingClass': schedulingClass},
+        body: JSON.stringify({'offset': offset, 'schedulingClass': schedulingClass}),
         headers: {"Content-type": 'application/json;'}
     })
     return response.body.times;
@@ -47,20 +53,25 @@ async function getAppointmentTimes(schedulingClass,offset) {
 export function Scheduler(props) {
     const navigate = useNavigate();
     const [selectedTime, setSelectedTime] = React.useState();
-    let apptData;
-    useEffect(async () => {
-        apptData = await updateApptData(props.currentApptId,props.currentApptData);
+    const [apptData, setApptData] = React.useState(props.apptData);
+    const [localSchedulingClass, setLSC] = React.useState(apptData?.schedulingClass);
+    useEffect(() => {
+        const updateData = async () => {
+            setApptData(await updateApptData(props.currentApptId,apptData));
+            setLSC(apptData.schedulingClass);
+        }
+        updateData();
+        
     },[])
-    localSchedulingClass = apptData.schedulingClass;
     const handleSubmit = async (event) => {
         event.preventDefault();
         apptData.time = selectedTime;
         await fetch('/api/appoointments/schedule/setAppointment',{
             method: "POST",
-            body: {
-                'appointmentId': currentApptId,
-                'appointmentData': currentApptData
-            },
+            body: JSON.stringify({
+                'appointmentId': props.currentApptId,
+                'appointmentData': apptData
+            }),
             headers: {
                 "Content-type": 'application/json;'
             }
