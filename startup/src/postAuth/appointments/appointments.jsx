@@ -61,10 +61,10 @@ function showInfo(id) {
 async function deleteAppointment(id,doctor,setAppointments) {
     const response = await fetch('/api/appointments/delete', {
         method: 'DELETE',
-        body: {
+        body: JSON.stringify({
             "id": id,
             "doctor": doctor
-        },
+        }),
         headers: {
             "Content-type": 'application/json;'
         }

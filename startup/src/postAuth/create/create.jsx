@@ -49,10 +49,10 @@ export function CreateAppointment(props) {
         };
         fetch('/api/appointments/create', {
             method: "POST",
-            body: {
+            body: JSON.stringify({
                 'appointmentID': appointmentID,
                 'appointmentData': appointmentData
-            },
+            }),
             headers: {
                 "Content-type": 'application/json;'
             }
