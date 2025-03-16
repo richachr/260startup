@@ -54,11 +54,7 @@ async function authCheckName() {
 
 async function logout() {
     await fetch('/api/logout', {
-        method: 'DELETE',
-        body: null,
-        headers: {
-            "Content-type": 'application/json;' // May need UTF-8 Encoding.
-        }
+        method: 'DELETE'
     });
 }
 
