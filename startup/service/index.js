@@ -10,6 +10,7 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
+const client = new openai.OpenAI();
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
@@ -88,16 +89,28 @@ const checkAuth = async (req,res,next) => {
 }
 
 function determineSchedulingClass(apptData) {
-    const pain = +Object.values(apptData)[0].painLevel;
-    const urgency = +Object.values(apptData)[0].urgencyLevel;
-    const seriousness = +Object.values(apptData)[0].seriousness;
+    const pain = +apptData.painLevel;
+    // const urgency = +Object.values(apptData)[0].urgencyLevel;
+    const urgency = +apptData.urgencyLevel;
+    const seriousness = +apptData.seriousness;
     return Math.ceil((pain+urgency+seriousness)/3);
 }
 
-function getChatgptResponse(apptData) {
+async function getChatgptResponse(apptData) {
     query = `Given the symptoms: ${apptData.symptoms}, give a ranking of the probable severity of these symptoms from 1-10 with 1 being the lowest and 10 the highest, and give the most probably diagnosis. Give only one number separated from the diagnosis with a comma, and give only the number and condition, with no extra words or commentary.`
-    apptData.diagnosis = "Needs medical care."
-    Object.values(apptData)[0].seriousness = 5
+
+    const completion = await client.chat.completions.create({
+        model: "gpt-4o",
+        messages: [{
+            role: "user",
+            content: query,
+        }],
+    });
+
+    const response = completion.choices[0].message.content.split(',');
+
+    apptData.diagnosis = response[1];
+    apptData.seriousness = response[0];
     return apptData;
 }
 
@@ -201,7 +214,7 @@ apiRouter.get('/data/get', checkAuth, async (req,res) => {
     res.send(result);
 })
 
-apiRouter.put('/appointments/create', checkAuth, async (req,res) => {
+apiRouter.post('/appointments/create', checkAuth, async (req,res) => {
     const appointmentData = req.body.appointmentData;
     const userName = req.cookies.userName;
     if (Object.values(appointmentData).some((value) => (value === "" || value === undefined))) {
@@ -219,12 +232,36 @@ apiRouter.put('/appointments/create', checkAuth, async (req,res) => {
     res.sendStatus(204);
 })
 
+apiRouter.post('/appoointments/schedule/getSchedule', checkAuth, async (req,res) => {
+    let apptData = await getChatgptResponse(req.body.appointmentData)
+    apptData.schedulingClass = determineSchedulingClass(apptData);
+    const userName = req.cookies.userName;
+    const apptId = req.body.appointmentId;
+    let userAppointments = getValue(userName,'appointments');
+    userAppointments[apptId] = apptData;
+    setValue(userName,'appointments',userAppointments);
+    res.status(200).send({data: apptData});
+})
+
+apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,res) => {
+    const apptData = req.body.appointmentData;
+    const userName = req.cookies.userName;
+    const apptId = req.body.appointmentId;
+    let userAppointments = getValue(userName,'appointments');
+    let doctorAppointments = getValue(apptData.doctor,'appointments')
+    userAppointments[apptId] = apptData;
+    doctorAppointments[apptId] = apptData;
+    setValue(userName,'appointments',userAppointments);
+    setValue(apptData.doctor,'appointments',doctorAppointments);
+    res.status(200).send({data: apptData});
+})
+
 app.listen(port, () => {
     console.log("Webserver started.")
 })
 
 //TODO: Use Authentication Endpoint for sensitive calls.
+//TODO: OpenAI API key on server
+//TODO: check async/await calls
 //TODO: Add appointments to schedules for user and doctor.
-//TODO: Move getSchedulingClass, ChatGPT call, timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
-//TODO: SetUserData endpoint?
-//TODO: Move form validation to backend?
+//TODO: Move timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
