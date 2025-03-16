@@ -243,6 +243,41 @@ apiRouter.post('/appoointments/schedule/getSchedule', checkAuth, async (req,res)
     res.status(200).send({data: apptData});
 })
 
+function* timeGenerator(suggestedDate) {
+    suggestedDate.setSeconds(0);
+    while(true) {
+        if(suggestedDate.getHours() > 16) {
+            suggestedDate.setHours(9);
+            suggestedDate.setDate((suggestedDate.getDate()+1));
+        } else if(suggestedDate.getHours() < 9) {
+            suggestedDate.setHours(9);
+        }
+        if(!(1<=suggestedDate.getDay() && suggestedDate.getDay()<=5)) {
+            suggestedDate.setDate((suggestedDate.getDate()+1));
+        }
+        if(1<=suggestedDate.getMinutes() && suggestedDate.getMinutes()<=29) {
+            suggestedDate.setMinutes(30);
+        } else if(31<=suggestedDate.getMinutes() && suggestedDate.getMinutes()<=59) {
+            suggestedDate.setMinutes(60);
+        }
+        yield new Date(suggestedDate);
+        suggestedDate.setMinutes((suggestedDate.getMinutes()+30));
+    }
+}
+
+apiRouter.post('/appointments/schedule/getTimes', checkAuth, async (req,res) => {
+    const classDateBindings = {10: 0, 9: 1, 8: 2, 7:3, 6:5, 5:7, 4:14, 3:30, 2:60, 1:180}
+    const currentDay = new Date();
+    const suggestedDate = new Date();
+    suggestedDate.setDate((currentDay.getDate() + classDateBindings[req.body.schedulingClass]));
+    const generator = timeGenerator(suggestedDate);
+    for(let i = 0; i < req.body.offset; i++) {
+        generator.next();
+    }
+    const times = [generator.next().value,generator.next().value,generator.next().value]
+    res.status(200).send({times: times});
+})
+
 apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,res) => {
     const apptData = req.body.appointmentData;
     const userName = req.cookies.userName;
@@ -253,7 +288,7 @@ apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,r
     doctorAppointments[apptId] = apptData;
     setValue(userName,'appointments',userAppointments);
     setValue(apptData.doctor,'appointments',doctorAppointments);
-    res.status(200).send({data: apptData});
+    res.sendStatus(200);
 })
 
 app.listen(port, () => {
@@ -263,5 +298,4 @@ app.listen(port, () => {
 //TODO: Use Authentication Endpoint for sensitive calls.
 //TODO: OpenAI API key on server
 //TODO: check async/await calls
-//TODO: Add appointments to schedules for user and doctor.
 //TODO: Move timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
