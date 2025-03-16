@@ -295,7 +295,4 @@ app.listen(port, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Use Authentication Endpoint for sensitive calls.
 //TODO: OpenAI API key on server
-//TODO: check async/await calls
-//TODO: Move timeGenerator, TimesAvailable to backend. Add wrapper for TimesAvailable.
