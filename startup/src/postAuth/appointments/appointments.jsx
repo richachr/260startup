@@ -4,34 +4,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarPlus, faFileLines, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
-function exportAppointments(userName) {
-    const userData = JSON.parse(localStorage.getItem(userName));
-    const appointmentText = JSON.stringify(userData.appointments ? userData.appointments : '');
-    const file = new Blob([appointmentText], {type: 'text/plain'});
-    const tempLink = document.createElement('a');
-    tempLink.href = URL.createObjectURL(file);
-    tempLink.download = 'Rappt Appointments.txt';
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    tempLink.remove();
-}
-
 async function fetchAppointments() {
     const response = await fetch('/api/data/get', {
         method: 'POST',
         body: JSON.stringify({"key": "appointments"}),
         headers: {
-            "Content-type": 'application/json;' // May need UTF-8 Encoding.
+            "Content-type": 'application/json' // May need UTF-8 Encoding.
         }
     });
     if(!response?.ok) {
-        alert(response.body.error);
-        if(response.status===401) {
-            navigate('/login')
-        }
+        const errorData = await response.json();
+        alert(errorData.error);
         return;
     }
-    return response.body.appointments;
+    const responseData = await response.json();
+    return responseData.appointments;
 }
 
 function AppointmentsBlock(props) {
@@ -66,10 +53,11 @@ async function deleteAppointment(id,doctor,setAppointments) {
             "doctor": doctor
         }),
         headers: {
-            "Content-type": 'application/json;'
+            "Content-type": 'application/json'
         }
     })
-    setAppointments(response.body.updatedAppointments);
+    const responseData = await response.json();
+    setAppointments(responseData.updatedAppointments);
 }
 
 function Appointment({data, userName, doctors, onAppointmentsChange}) {
@@ -105,24 +93,30 @@ function Appointment({data, userName, doctors, onAppointmentsChange}) {
 }
 
 export function Appointments(props) {
-    const [appointments, setAppointments] = React.useState(fetchAppointments(props.userName));
-
+    const [appointments, setAppointments] = React.useState([]);
+    const [doctors,setDoctors] = React.useState({});
     useEffect(() => {
-        // Is this necessary?
-        const newAppointments = fetchAppointments();
-        if (JSON.stringify(newAppointments) !== JSON.stringify(appointments)) {
-            setAppointments(newAppointments);
+        const fetchData = async () => {
+            const newAppointments = await fetchAppointments();
+            if (JSON.stringify(newAppointments) !== JSON.stringify(appointments)) {
+                setAppointments(newAppointments);
+            }
+        };
+        const fetchDoctors = async () => {
+            const response = await fetch('/api/doctors',{method: "GET"});
+            const responseData = await response.json();
+            setDoctors(responseData);
         }
+        fetchData();
+        fetchDoctors();
     },[appointments]);
 
-    const doctors = fetch('/api/doctors',{method: "GET"}).body;
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="docs-together.png" alt="Doctors" />
             <h1>Your Appointments</h1>
             <div className="actions">
                 <NavLink to="/create-appointment"><button className="primary"><FontAwesomeIcon icon={faCalendarPlus} className="fontAwesome" /><span>New</span></button></NavLink>
-                <button className="secondary" onClick={() => exportAppointments(props.userName)}><FontAwesomeIcon icon={faArrowUpRightFromSquare} className="fontAwesome" /><span>Export</span></button>
             </div>
             <AppointmentsBlock userName={props.userName} appointments={appointments} doctors={doctors} onAppointmentsChange={(newAppointments) => setAppointments(newAppointments)} />
         </div>
