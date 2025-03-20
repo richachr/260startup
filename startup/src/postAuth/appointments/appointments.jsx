@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarPlus, faFileLines, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 async function fetchAppointments() {
@@ -68,7 +67,7 @@ function Appointment({data, userName, doctors, onAppointmentsChange}) {
         <div className="appointment" id={idValue}>
             <div className="denseInfoContainer">
                 <span>{apptInfo.doctor===userName ? apptInfo.name : doctors[apptInfo.doctor]}</span>
-                <span>{apptInfo.time ? apptInfo.time : "Unscheduled"}</span>
+                <span>{apptInfo.time ? new Date(apptInfo.time).toLocaleString() : "Unscheduled"}</span>
                 <div className="additionalApptInfo" style={{width: 0, height: 0}}>
                     <p>Patient Name: {apptInfo.name}</p>
                     <p>Date of Birth: {apptInfo.dateOfBirth}</p>
