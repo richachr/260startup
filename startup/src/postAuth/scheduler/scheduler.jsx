@@ -14,9 +14,9 @@ function TimesAvailable({onTimeSelect,schedulingClass}) {
     },[schedulingClass,offset])
     return (
         <fieldset className="fieldset" onChange={(e) =>onTimeSelect(e.target.value)}>
-            {apptOptions.map((value,index) => { return(
+            {apptOptions.map((time,index) => { return(
                 <div className="formItem" key={index}>
-                    <label for={index}><input type="radio" name="apptTime" id={index} value={value.toString()} />{value.toLocaleString()}</label>
+                    <label for={index}><input type="radio" name="apptTime" id={index} value={time} />{new Date(time).toLocaleString()}</label>
                 </div>
             )})}
             <div className="actions">
@@ -24,21 +24,6 @@ function TimesAvailable({onTimeSelect,schedulingClass}) {
             </div>
         </fieldset>
     )
-}
-
-async function updateApptData(currentApptId,currentApptData) {
-    const response = await fetch('/api/appoointments/schedule/getSchedule',{
-        method: "POST",
-        body: JSON.stringify({
-            'appointmentId': currentApptId,
-            'appointmentData': currentApptData
-        }),
-        headers: {
-            "Content-type": 'application/json'
-        }
-    })
-    const responseData = await response.json();
-    return responseData.data;
 }
 
 async function getAppointmentTimes(schedulingClass,offset) {
@@ -55,16 +40,8 @@ async function getAppointmentTimes(schedulingClass,offset) {
 export function Scheduler(props) {
     const navigate = useNavigate();
     const [selectedTime, setSelectedTime] = React.useState();
-    const [apptData, setApptData] = React.useState(props.apptData);
-    const [localSchedulingClass, setLSC] = React.useState(apptData?.schedulingClass);
-    useEffect(() => {
-        const updateData = async () => {
-            setApptData(await updateApptData(props.currentApptId,apptData));
-            setLSC(apptData.schedulingClass);
-        }
-        updateData();
-        
-    },[])
+    const [apptData, setApptData] = React.useState(props.currentApptData);
+    const [localSchedulingClass, setLSC] = React.useState(props.currentApptData.schedulingClass);
     const handleSubmit = async (event) => {
         event.preventDefault();
         apptData.time = selectedTime;
