@@ -17,11 +17,18 @@ const client = new openai.OpenAI({ apiKey: apiKey});
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-let users = {};
+let users = {"james.howard@ihc.org": {
+    name: "James Howard",
+    email: "james.howard@ihc.org",
+    doctorStatus: "true",
+    dateOfBirth: "1973-06-07",
+    appointments: [
+    ],
+    hashedPassword: "$2b$10$fMq04y1YKZWaaggHd6GMI.KmnKuMQXavmF.8d/kr1d9wx0NV5vP0m"
+  }};
 let doctors = {"james.howard@ihc.org": "James Howard"};
 
 function userExists(userName) {
-    // Tested
     if(userName && userName in users) {
         return true;
     }
@@ -29,7 +36,6 @@ function userExists(userName) {
 }
 
 function getValue(userName,key) {
-    // Tested
     try {
         return users[userName][key];
     } catch {
@@ -39,7 +45,6 @@ function getValue(userName,key) {
 }
 
 function setValue(userName,key,value) {
-    // Tested
     try {
         users[userName][key] = value;
     } catch {
@@ -49,7 +54,6 @@ function setValue(userName,key,value) {
 }
 
 function setCookies(res,userName) {
-    // Tested
     const token = uuid.v4();
     setValue(userName, 'authToken', token)
     res.cookie('authToken', token, {
@@ -67,7 +71,6 @@ function setCookies(res,userName) {
 }
 
 const checkAuth = async (req,res,next) => {
-    // Tested
     const userName = req.cookies.userName;
     const currentToken = req.cookies.authToken;
     if(userName && currentToken && getValue(userName,'authToken')===currentToken) {
@@ -79,14 +82,13 @@ const checkAuth = async (req,res,next) => {
 
 function determineSchedulingClass(apptData) {
     const pain = +apptData.painLevel;
-    // const urgency = +Object.values(apptData)[0].urgencyLevel;
     const urgency = +apptData.urgencyLevel;
     const seriousness = +apptData.seriousness;
     return Math.ceil((pain+urgency+seriousness)/3);
 }
 
 async function getChatgptResponse(apptData) {
-    query = `Given the symptoms: ${apptData.symptoms}, give a ranking of the probable severity of these symptoms from 1-10 with 1 being the lowest and 10 the highest, and give the most probably diagnosis. Give only one number separated from the diagnosis with a comma, and give only the number and condition, with no extra words or commentary.`
+    query = `Given the symptoms: ${apptData.symptoms}, give a ranking of the probable severity of these symptoms from 1-10 with 1 being the lowest and 10 the highest, and give the most probably diagnosis. Give only one number separated from the diagnosis with a comma, and give only the number and condition, with no extra words or commentary. If there are commas in the condition, remove them.`
     const completion = await client.chat.completions.create({
         model: "gpt-4o",
         messages: [{
@@ -101,7 +103,6 @@ async function getChatgptResponse(apptData) {
 }
 
 apiRouter.post('/register', async (req, res) => {
-    // Tested
     const userData = req.body;
     if(userExists(userData.email)) {
         res.status(409).send({error: "That user already exists. Please log in instead."})
@@ -127,7 +128,6 @@ apiRouter.post('/register', async (req, res) => {
 })
 
 apiRouter.post('/login', async (req,res) => {
-    // Tested
     const loginData = req.body;
     const exists = userExists(loginData.email);
     if(!exists) {
@@ -135,7 +135,10 @@ apiRouter.post('/login', async (req,res) => {
         return;
     }
     const storedPassword = getValue(loginData.email,'hashedPassword');
-    const passwordsMatch = await bcrypt.compare(loginData.password, storedPassword);
+    let passwordsMatch = false;
+    if(loginData.password && storedPassword) {
+        passwordsMatch = await bcrypt.compare(loginData.password, storedPassword);
+    }
     if(passwordsMatch) {
         setCookies(res,loginData.email);
         res.status(200).send({userName: loginData.email});
@@ -147,8 +150,7 @@ apiRouter.post('/login', async (req,res) => {
 })
 
 apiRouter.delete('/logout', async (req,res) => {
-    // Tested
-    const userName = req.cookies['userName'];
+    const userName = req.cookies.userName;
     setValue(userName,'authToken',undefined);
     res.clearCookie('authToken');
     res.clearCookie('userName');
@@ -156,18 +158,18 @@ apiRouter.delete('/logout', async (req,res) => {
 })
 
 apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
-    const userName = req.cookies['userName'];
+    const userName = req.cookies.userName;
     let userAppointments = getValue(userName,'appointments');
     let doctorAppointments = getValue(req.body.doctor,'appointments');
     let newUserAppointments = [];
     let newDoctorAppointments = [];
     userAppointments.forEach(element => {
-        if (Object.keys(element)[0] !== id) {
+        if (Object.keys(element)[0] !== req.body.id) {
             newUserAppointments.push(element);
         }
     });
     doctorAppointments.forEach(element => {
-        if (Object.keys(element)[0] !== id) {
+        if (Object.keys(element)[0] !== req.body.id) {
             newDoctorAppointments.push(element);
         }
     });
@@ -177,13 +179,13 @@ apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
 })
 
 apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
-    // Tested
     res.status(200).send(doctors);
 })
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
-    let result = users[userName];
+    const storedData = users[userName];
+    let result = {...storedData};
     if(result.hashedPassword) {
         delete result.hashedPassword;
     }
@@ -194,7 +196,6 @@ apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
 })
 
 apiRouter.post('/data/get', checkAuth, async (req,res) => {
-    // Tested
     const key = req.body.key;
     const userName = req.cookies.userName;
     let result = {};
@@ -209,32 +210,23 @@ apiRouter.post('/data/get', checkAuth, async (req,res) => {
 })
 
 apiRouter.post('/appointments/create', checkAuth, async (req,res) => {
-    const appointmentData = req.body.appointmentData;
+    let appointmentData = req.body.appointmentData;
     const userName = req.cookies.userName;
     if (Object.values(appointmentData).some((value) => (value === "" || value === undefined))) {
         res.status(400).send({error: 'One or more of the fields are empty. Please check your response and resubmit.'})
         return;
     }
-    if (appointmentData.name===getValue(userName,'name') && dateOfBirth===getValue(userName,'dateOfBirth')) {
+    if (appointmentData.name===getValue(userName,'name') && appointmentData.dateOfBirth===getValue(userName,'dateOfBirth')) {
         setValue(userName,'gender',appointmentData.gender);
         setValue(userName,'phone',appointmentData.phone);
         setValue(userName,'address',appointmentData.address)
     }
+    appointmentData = await getChatgptResponse(appointmentData);
+    appointmentData.schedulingClass = determineSchedulingClass(appointmentData);
     let userAppointments = getValue(userName,'appointments');
     userAppointments.push({[req.body.appointmentID]:appointmentData});
     setValue(userName,'appointments',userAppointments);
-    res.sendStatus(204);
-})
-
-apiRouter.post('/appoointments/schedule/getSchedule', checkAuth, async (req,res) => {
-    let apptData = await getChatgptResponse(req.body.appointmentData)
-    apptData.schedulingClass = determineSchedulingClass(apptData);
-    const userName = req.cookies.userName;
-    const apptId = req.body.appointmentId;
-    let userAppointments = getValue(userName,'appointments');
-    userAppointments[apptId] = apptData;
-    setValue(userName,'appointments',userAppointments);
-    res.status(200).send({data: apptData});
+    res.status(200).send({apptData: appointmentData});
 })
 
 function* timeGenerator(suggestedDate) {
@@ -263,7 +255,9 @@ apiRouter.post('/appointments/schedule/getTimes', checkAuth, async (req,res) => 
     const classDateBindings = {10: 0, 9: 1, 8: 2, 7:3, 6:5, 5:7, 4:14, 3:30, 2:60, 1:180}
     const currentDay = new Date();
     const suggestedDate = new Date();
-    suggestedDate.setDate((currentDay.getDate() + classDateBindings[req.body.schedulingClass]));
+    const schedulingClass = req.body.schedulingClass;
+    const dateOffset = classDateBindings[schedulingClass];
+    suggestedDate.setDate((currentDay.getDate() + dateOffset));
     const generator = timeGenerator(suggestedDate);
     for(let i = 0; i < req.body.offset; i++) {
         generator.next();
@@ -278,8 +272,8 @@ apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,r
     const apptId = req.body.appointmentId;
     let userAppointments = getValue(userName,'appointments');
     let doctorAppointments = getValue(apptData.doctor,'appointments')
-    userAppointments[apptId] = apptData;
-    doctorAppointments[apptId] = apptData;
+    userAppointments.forEach(item => {if(Object.keys(item)[0]===apptId) {item[apptId] = apptData}});
+    doctorAppointments.push({[apptId]: apptData});
     setValue(userName,'appointments',userAppointments);
     setValue(apptData.doctor,'appointments',doctorAppointments);
     res.sendStatus(200);
@@ -296,7 +290,3 @@ app.use((_req,res) => {
 app.listen(port, () => {
     console.log("Webserver started.")
 })
-
-//TODO: Test scheduling class, chatgpt, appointment creation, appointment deletion, get all data, get schedules, get times, set appointment.
-//TODO: Password not stored as hash
-//TODO: Create page not autofilling
