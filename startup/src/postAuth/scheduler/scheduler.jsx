@@ -34,19 +34,21 @@ async function updateApptData(currentApptId,currentApptData) {
             'appointmentData': currentApptData
         }),
         headers: {
-            "Content-type": 'application/json;'
+            "Content-type": 'application/json'
         }
     })
-    return response.body.data;
+    const responseData = await response.json();
+    return responseData.data;
 }
 
 async function getAppointmentTimes(schedulingClass,offset) {
     const response = await fetch('/api/appointments/schedule/getTimes', {
         method: "POST",
         body: JSON.stringify({'offset': offset, 'schedulingClass': schedulingClass}),
-        headers: {"Content-type": 'application/json;'}
+        headers: {"Content-type": 'application/json'}
     })
-    return response.body.times;
+    const responseData = await response.json();
+    return responseData.times;
 }
 
 // props: userName={userName} currentApptId={currentApptId} currentApptData={currentApptData}
@@ -73,7 +75,7 @@ export function Scheduler(props) {
                 'appointmentData': apptData
             }),
             headers: {
-                "Content-type": 'application/json;'
+                "Content-type": 'application/json'
             }
         })
         props.onCurrentApptChange(null,null);
