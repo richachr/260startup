@@ -6,62 +6,50 @@ const app = express();
 const openai = require('openai');
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
+const config = require('./config.json');
+const apiKey = config.OPENAI_API_KEY;
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
-const client = new openai.OpenAI();
+const client = new openai.OpenAI({ apiKey: apiKey});
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-let users = {"test@test.test": {
-    "name": "test",
-    "email": "test@test.test",
-    "dateOfBirth": "2025-02-26",
-    "hashedPassword": "$2b$10$fU0RTDHctl2g4cdgeWkfMO.1RK8uOVdvfBRWLlVJYGJiNqXuAtU0y",
-    "appointments": [
-        {
-            "7a925dec-6f53-419b-86b4-fd83a89edb48": {
-                "name": "test",
-                "dateOfBirth": "2025-02-26",
-                "gender": "Male",
-                "phone": "8018018011",
-                "address": "9 Heritage Halls #4104",
-                "doctor": "james.howard@ihc.org",
-                "purpose": "Non-urgent Treatment",
-                "painLevel": "3",
-                "urgencyLevel": "3",
-                "symptoms": "Owie",
-                "diagnosis": "Needs medical care.",
-                "seriousness": 5,
-                "schedulingClass": 4,
-                "time": "Fri Mar 14 2025 11:00:00 GMT-0600 (Mountain Daylight Time)"
-            }
-        }
-    ],
-    "gender": "Male",
-    "phone": "8018018011",
-    "address": "9 Heritage Halls #4104"
-}};
+let users = {};
 let doctors = {"james.howard@ihc.org": "James Howard"};
 
-async function userExists(userName) {
-    if(userName && userName in Object.keys(users)) {
+function userExists(userName) {
+    // Tested
+    if(userName && userName in users) {
         return true;
     }
     return false;
 }
 
 function getValue(userName,key) {
-    return users[userName][key];
+    // Tested
+    try {
+        return users[userName][key];
+    } catch {
+        return undefined;
+    }
+    
 }
 
 function setValue(userName,key,value) {
-    users[userName][key] = value;
+    // Tested
+    try {
+        users[userName][key] = value;
+    } catch {
+        console.error(`Error setting value ${key}.`);
+    }
+    
 }
 
 function setCookies(res,userName) {
+    // Tested
     const token = uuid.v4();
     setValue(userName, 'authToken', token)
     res.cookie('authToken', token, {
@@ -79,9 +67,10 @@ function setCookies(res,userName) {
 }
 
 const checkAuth = async (req,res,next) => {
+    // Tested
     const userName = req.cookies.userName;
     const currentToken = req.cookies.authToken;
-    if(getValue(userName,'authToken')===currentToken) {
+    if(userName && currentToken && getValue(userName,'authToken')===currentToken) {
         next();
     } else {
         res.status(401).send({error: 'Authentication failed. Please log in again.'})
@@ -98,7 +87,6 @@ function determineSchedulingClass(apptData) {
 
 async function getChatgptResponse(apptData) {
     query = `Given the symptoms: ${apptData.symptoms}, give a ranking of the probable severity of these symptoms from 1-10 with 1 being the lowest and 10 the highest, and give the most probably diagnosis. Give only one number separated from the diagnosis with a comma, and give only the number and condition, with no extra words or commentary.`
-
     const completion = await client.chat.completions.create({
         model: "gpt-4o",
         messages: [{
@@ -106,17 +94,16 @@ async function getChatgptResponse(apptData) {
             content: query,
         }],
     });
-
     const response = completion.choices[0].message.content.split(',');
-
     apptData.diagnosis = response[1];
     apptData.seriousness = response[0];
     return apptData;
 }
 
 apiRouter.post('/register', async (req, res) => {
+    // Tested
     const userData = req.body;
-    if(await userExists(userData.email)) {
+    if(userExists(userData.email)) {
         res.status(409).send({error: "That user already exists. Please log in instead."})
         return;
     }
@@ -128,7 +115,9 @@ apiRouter.post('/register', async (req, res) => {
         doctors[userData.email] = userData.name;
     }
     try {
-        userData.hashedPassword = await bcrypt.hash(userData.hashedPassword, 10);
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+        userData.hashedPassword = hashedPassword;
+        delete userData.password;
     } catch (err) {
         console.error(`Error: ${err}`);
     }
@@ -138,19 +127,16 @@ apiRouter.post('/register', async (req, res) => {
 })
 
 apiRouter.post('/login', async (req,res) => {
+    // Tested
     const loginData = req.body;
-    let enteredPassword;
-    if(!await userExists(loginData.email)) {
-        res.status(404).send({error: "No user found with that email. Please create an account."});
+    const exists = userExists(loginData.email);
+    if(!exists) {
+        res.    status(404).send({error: "No user found with that email. Please create an account."});
         return;
     }
-    try {
-        enteredPassword = await bcrypt.hash(loginData.hashedPassword, 10);
-    } catch (err) {
-        console.error(`Error: ${err}`);
-    }
-    const storedPassword = getValue(loginData.email,hashedPassword);
-    if(bcrypt.compare(enteredPassword, storedPassword)) {
+    const storedPassword = getValue(loginData.email,'hashedPassword');
+    const passwordsMatch = await bcrypt.compare(loginData.password, storedPassword);
+    if(passwordsMatch) {
         setCookies(res,loginData.email);
         res.status(200).send({userName: loginData.email});
         return;
@@ -161,6 +147,7 @@ apiRouter.post('/login', async (req,res) => {
 })
 
 apiRouter.delete('/logout', async (req,res) => {
+    // Tested
     const userName = req.cookies['userName'];
     setValue(userName,'authToken',undefined);
     res.clearCookie('authToken');
@@ -190,17 +177,24 @@ apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
 })
 
 apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
+    // Tested
     res.status(200).send(doctors);
 })
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
     let result = users[userName];
-    delete result.hashedPassword;
+    if(result.hashedPassword) {
+        delete result.hashedPassword;
+    }
+    if(result.authToken) {
+        delete result.authToken;
+    }
     res.status(200).send(result);
 })
 
-apiRouter.get('/data/get', checkAuth, async (req,res) => {
+apiRouter.post('/data/get', checkAuth, async (req,res) => {
+    // Tested
     const key = req.body.key;
     const userName = req.cookies.userName;
     let result = {};
@@ -291,8 +285,18 @@ apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,r
     res.sendStatus(200);
 })
 
+app.use(function (err,_req,res,next) {
+    res.status(500).send({error: err.message})
+})
+
+app.use((_req,res) => {
+    res.sendFile('index.html', {root: 'public'});
+})
+
 app.listen(port, () => {
     console.log("Webserver started.")
 })
 
-//TODO: OpenAI API key on server
+//TODO: Test scheduling class, chatgpt, appointment creation, appointment deletion, get all data, get schedules, get times, set appointment.
+//TODO: Password not stored as hash
+//TODO: Create page not autofilling
