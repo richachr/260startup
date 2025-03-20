@@ -74,7 +74,7 @@ export default function PostAuthHeader() {
         <div className="reactContent">
             <header id='postAuth'>
                 <div className="leftContent">
-                    <NavLink to="/" className="logo"><img src="RapptLogo.png" alt="Logo" className="logo" /><h2 className="logo">Rappt</h2></NavLink>
+                    <NavLink to="/appointments" className="logo"><img src="RapptLogo.png" alt="Logo" className="logo" /><h2 className="logo">Rappt</h2></NavLink>
                 </div>
                 <div className="rightContent" id='postAuth'>
                     <nav>
