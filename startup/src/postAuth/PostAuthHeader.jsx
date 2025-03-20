@@ -33,23 +33,24 @@ function NotificationsBlock(props) {
     )
 }
 
-async function authCheckName() {
-    const navigate = useNavigate();
+async function authCheckName(navigate) {
     const response = await fetch('/api/data/get', {
         method: 'POST',
         body: JSON.stringify({"key": "name"}),
         headers: {
-            "Content-type": 'application/json;' // May need UTF-8 Encoding.
+            "Content-type": 'application/json'
         }
     });
     if(!response?.ok) {
-        alert(response.body.error);
+        const errorData = await response.json();
+        alert(errorData.error);
         if(response.status===401) {
             navigate('/login')
         }
         return;
     }
-    return response.body.name;
+    const data = await response.json();
+    return data.name;
 }
 
 async function logout() {
@@ -60,10 +61,15 @@ async function logout() {
 
 export default function PostAuthHeader() {
     const navigate = useNavigate();
-    let name;
+    const [name,setName] = React.useState(undefined);
     useEffect(() => {
-        name = authCheckName();
-    },[]);
+        const getName = async () => {
+            const fetchedName = await authCheckName(navigate);
+            setName(fetchedName);
+            return;
+        }
+        getName();
+    },[name]);
     return (
         <div className="reactContent">
             <header id='postAuth'>
