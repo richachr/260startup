@@ -67,7 +67,7 @@ function Appointment({data, userName, doctors, onAppointmentsChange}) {
         <div className="appointment" id={idValue}>
             <div className="denseInfoContainer">
                 <span>{apptInfo.doctor===userName ? apptInfo.name : doctors[apptInfo.doctor]}</span>
-                <span>{apptInfo.time ? new Date(apptInfo.time).toLocaleString("en-US",{timeZone: "MST", dateStyle: "long", timeStyle: "short"}) : "Unscheduled"}</span>
+                <span>{apptInfo.time ? new Date(apptInfo.time).toLocaleString("en-US",{timeZone: "America/Denver", dateStyle: "long", timeStyle: "short"}) : "Unscheduled"}</span>
                 <div className="additionalApptInfo" style={{width: 0, height: 0}}>
                     <p>Patient Name: {apptInfo.name}</p>
                     <p>Date of Birth: {apptInfo.dateOfBirth}</p>
