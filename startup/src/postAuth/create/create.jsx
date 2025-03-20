@@ -1,11 +1,25 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
 
 function DoctorsInput(props) {
-    const doctors = fetch('/api/doctors',{method: "GET"}).body;
+    const [doctors, setDoctors] = React.useState({});
+    useEffect(() => {
+        const fetchDoctors = async () => {
+            try {
+                const response = await fetch('/api/doctors', {method: "GET"});
+                const body = await response.json();
+                setDoctors(body);
+            }
+            catch (err) {
+                alert(err.error);
+            }
+        }
+        fetchDoctors();
+    },[]);
+
     return (
         <select name="doctor" id="doctor" defaultValue={props.doctor} onChange={(e) => props.setDoctor(e.target.value)}>
             <option></option>
@@ -18,8 +32,8 @@ function DoctorsInput(props) {
 
 export function CreateAppointment(props) {
     const navigate = useNavigate();
-    let userData = fetch('/api/data/get/all', {method: "GET"}).body;
     const savedData = props.currentApptData ? Object.values(props.currentApptData)[0] : {};
+    const [userData, setUserData] = React.useState({name: "", dateOfBirth: undefined})
     const [name,setName] = useState(savedData.name ? savedData.name : userData.name);
     const [dateOfBirth, setDateOfBirth] = useState(savedData.dateOfBirth ? savedData.dateOfBirth : userData.dateOfBirth);
     const [gender, setGender] = useState(savedData.gender ? savedData.gender : userData.gender ? userData.gender : undefined);
@@ -31,6 +45,14 @@ export function CreateAppointment(props) {
     const [urgencyLevel, setUrgencyLevel] = useState(savedData.urgencyLevel ? savedData.urgencyLevel : undefined);
     const [symptoms, setSymptoms] = useState(savedData.symptoms ? savedData.symptoms : undefined);
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await fetch('/api/data/get/all', {method: "GET"});
+            const body = await response.json();
+            setUserData(body);
+        }
+        fetchUserData();
+    },[])
     const handleSubmit = (event) => {
         event.preventDefault();
         const appointmentID = props.currentApptId ? props.currentApptId : uuid();
@@ -54,7 +76,7 @@ export function CreateAppointment(props) {
                 'appointmentData': appointmentData
             }),
             headers: {
-                "Content-type": 'application/json;'
+                "Content-type": 'application/json'
             }
         })
         props.onCurrentApptChange(appointmentID,appointmentData);
