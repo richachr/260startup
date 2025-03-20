@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import bcrypt from "bcryptjs";
 
 export function Homepage() {
     return (
@@ -35,22 +34,23 @@ export function Login(props) {
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setPassword(await bcrypt.hash(password,10));
         const response = await fetch('/api/login', {
             method: 'POST',
-            body: JSON.stringify({"email": email, "hashedPassword": password}),
+            body: JSON.stringify({"email": email, "password": password}),
             headers: {
-                "Content-type": 'application/json;' // May need UTF-8 Encoding.
+                "Content-type": 'application/json' // May need UTF-8 Encoding.
             }
-        })
+        });
         if(!response?.ok) {
-            alert(response.body.error);
+            const errorData = await response.json();
+            alert(errorData.error);
             if(response.status===404) {
                 navigate('/create-account')
             }
             return;
         }
-        props.onLoginChange(response.body.userName);
+        const responseData = await response.json();
+        props.onLoginChange(responseData.userName);
         navigate('/appointments');
     }
     return (
@@ -80,6 +80,7 @@ export function CreateAccount(props) {
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
+        let hash;
         if (password !== checkPassword) {
             alert(`Your passwords don't match. Please try again.`);
             return;
@@ -88,25 +89,23 @@ export function CreateAccount(props) {
             alert(`One or more fields are empty. Please fill them in and resubmit.`);
             return;
         }
-        try {
-            const hash = await bcrypt.hash(password, 10);
-        } catch (err) {
-            console.error(`Error: ${err}`);
-        }
         const response = await fetch('/api/register', {
             method: 'POST',
-            body: JSON.stringify({ "name": name, "email": email, "doctorStatus": doctorStatus, "dateOfBirth": dateOfBirth, "hashedPassword": hash, "appointments": [] }),
+            body: JSON.stringify({ "name": name, "email": email, "doctorStatus": doctorStatus, "dateOfBirth": dateOfBirth, "password": password, "appointments": [] }),
             headers: {
-                "Content-type": 'application/json;' // May need UTF-8 Encoding.
+                "Content-type": 'application/json' // May need UTF-8 Encoding.
             }
         });
         if(!response?.ok) {
-            alert(response.body.error);
+            const errorData = await response.json();
+            alert(errorData.error);
             if(response.status===409) {
                 navigate('/login')
             }
+            return;
         }
-        props.onLoginChange(response.body.userName);
+        const responseData = await response.json();
+        props.onLoginChange(responseData.userName);
         navigate("/appointments");
     }
 
