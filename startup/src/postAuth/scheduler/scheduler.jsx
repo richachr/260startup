@@ -16,7 +16,7 @@ function TimesAvailable({onTimeSelect,schedulingClass}) {
         <fieldset className="fieldset" onChange={(e) =>onTimeSelect(e.target.value)}>
             {apptOptions.map((time,index) => { return(
                 <div className="formItem" key={index}>
-                    <label for={index}><input type="radio" name="apptTime" id={index} value={time} />{new Date(time).toLocaleString()}</label>
+                    <label for={index}><input type="radio" name="apptTime" id={index} value={time} />{new Date(time).toLocaleString("en-US",{timeZone: "MST", dateStyle: "long", timeStyle: "short"})}</label>
                 </div>
             )})}
             <div className="actions">
