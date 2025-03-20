@@ -108,11 +108,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Node.js/Express HTTP service** - I did not complete this part of the deliverable.
-- [ ] **Static middleware for frontend** - I did not complete this part of the deliverable.
-- [ ] **Calls to third party endpoints** - I did not complete this part of the deliverable.
-- [ ] **Backend service endpoints** - I did not complete this part of the deliverable.
-- [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
+- [x] **Node.js/Express HTTP service** - Implemented!
+- [x] **Static middleware for frontend** - Calls public directory using express.
+- [x] **Calls to third party endpoints** - The frontend calls a backend endpoint, which calls ChatGPT to determine seriousness of symptoms and give a possible diagnosis, which is added to the appointment data and available to the patient and doctor..
+- [x] **Backend service endpoints** - The backend implements many endpoints for appointment creation, fetching times, setting appointments, getting and setting user data, etc.
+- [x] **Frontend calls service endpoints** - There are many fetch calls from the frontend to various backend endpoints.
+- [x] **Supports registration, login, logout, and restricted endpoint** - All functionalities are implemented using endpoints and authentication middleware. Authorization is done through the PostAuthHeader calling a restricted endpoint.
 
 ## 🚀 DB/Login deliverable
 
