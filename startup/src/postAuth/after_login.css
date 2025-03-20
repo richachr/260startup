@@ -109,6 +109,12 @@ img#postAuth {
     background-color: #ffffff;
 }
 
+.apptActions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .denseInfoContainer {
     display: flex;
     flex-direction: column;
