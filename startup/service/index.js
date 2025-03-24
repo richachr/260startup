@@ -15,24 +15,37 @@ const url = dbConfig.uri;
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static('public'));
-const client = new openai.OpenAI({ apiKey: apiKey});
+const openaiClient = new openai.OpenAI({ apiKey: apiKey});
+const dbClient = new MongoClient(url);
+const db = dbClient.db('rappt');
+const users = db.collection('users');
+const doctors = db.collection('doctors');
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-let users = {"james.howard@ihc.org": {
+(async function testConnection() {
+    try {
+        await db.command({ping: 1});
+        console.log('Database connected.');
+    } catch (err) {
+        console.error(err.message);
+        process.exit(1)
+    }
+})();
+
+users.insertOne({
     name: "James Howard",
     email: "james.howard@ihc.org",
     doctorStatus: "true",
     dateOfBirth: "1973-06-07",
-    appointments: [
-    ],
+    appointments: [],
     hashedPassword: "$2b$10$fMq04y1YKZWaaggHd6GMI.KmnKuMQXavmF.8d/kr1d9wx0NV5vP0m"
-  }};
-let doctors = {"james.howard@ihc.org": "James Howard"};
+  });
+doctors.insertOne({email: "james.howard@ihc.org", name: "James Howard"});
 
-function userExists(userName) {
-    if(userName && userName in users) {
+async function userExists(userName) {
+    if(userName && await users.findOne({email: userName}) !== null) {
         return true;
     }
     return false;
@@ -92,7 +105,7 @@ function determineSchedulingClass(apptData) {
 
 async function getChatgptResponse(apptData) {
     query = `Given the symptoms: ${apptData.symptoms}, give a ranking of the probable severity of these symptoms from 1-10 with 1 being the lowest and 10 the highest, and give the most probably diagnosis. Give only one number separated from the diagnosis with a comma, and give only the number and condition, with no extra words or commentary. If there are commas in the condition, remove them.`
-    const completion = await client.chat.completions.create({
+    const completion = await openaiClient.chat.completions.create({
         model: "gpt-4o",
         messages: [{
             role: "user",
@@ -107,7 +120,7 @@ async function getChatgptResponse(apptData) {
 
 apiRouter.post('/register', async (req, res) => {
     const userData = req.body;
-    if(userExists(userData.email)) {
+    if(await userExists(userData.email)) {
         res.status(409).send({error: "That user already exists. Please log in instead."})
         return;
     }
@@ -132,7 +145,7 @@ apiRouter.post('/register', async (req, res) => {
 
 apiRouter.post('/login', async (req,res) => {
     const loginData = req.body;
-    const exists = userExists(loginData.email);
+    const exists = await userExists(loginData.email);
     if(!exists) {
         res.    status(404).send({error: "No user found with that email. Please create an account."});
         return;
