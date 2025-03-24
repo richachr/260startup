@@ -45,15 +45,16 @@ users.insertOne({
 doctors.insertOne({email: "james.howard@ihc.org", name: "James Howard"});
 
 async function userExists(userName) {
-    if(userName && await users.findOne({email: userName}) !== null) {
+    if(userName && await users.findOne({email: userName})) {
         return true;
     }
     return false;
 }
 
-function getValue(userName,key) {
+async function getValue(userName,key) {
     try {
-        return users[userName][key];
+        const result = await users.findOne({email: userName},{_id: 0, [key]:1});
+        return result[key];
     } catch {
         return undefined;
     }
@@ -89,7 +90,7 @@ function setCookies(res,userName) {
 const checkAuth = async (req,res,next) => {
     const userName = req.cookies.userName;
     const currentToken = req.cookies.authToken;
-    if(userName && currentToken && getValue(userName,'authToken')===currentToken) {
+    if(userName && currentToken && await getValue(userName,'authToken')===currentToken) {
         next();
     } else {
         res.status(401).send({error: 'Authentication failed. Please log in again.'})
@@ -150,7 +151,7 @@ apiRouter.post('/login', async (req,res) => {
         res.    status(404).send({error: "No user found with that email. Please create an account."});
         return;
     }
-    const storedPassword = getValue(loginData.email,'hashedPassword');
+    const storedPassword = await getValue(loginData.email,'hashedPassword');
     let passwordsMatch = false;
     if(loginData.password && storedPassword) {
         passwordsMatch = await bcrypt.compare(loginData.password, storedPassword);
@@ -167,7 +168,7 @@ apiRouter.post('/login', async (req,res) => {
 
 apiRouter.delete('/logout', async (req,res) => {
     const userName = req.cookies.userName;
-    setValue(userName,'authToken',undefined);
+    setValue(userName,'authToken',null);
     res.clearCookie('authToken');
     res.clearCookie('userName');
     res.sendStatus(204);
@@ -175,8 +176,8 @@ apiRouter.delete('/logout', async (req,res) => {
 
 apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
-    let userAppointments = getValue(userName,'appointments');
-    let doctorAppointments = getValue(req.body.doctor,'appointments');
+    let userAppointments = await getValue(userName,'appointments');
+    let doctorAppointments = await getValue(req.body.doctor,'appointments');
     let newUserAppointments = [];
     let newDoctorAppointments = [];
     userAppointments.forEach(element => {
@@ -215,13 +216,7 @@ apiRouter.post('/data/get', checkAuth, async (req,res) => {
     const key = req.body.key;
     const userName = req.cookies.userName;
     let result = {};
-    if(typeof key==="object") {
-        key.forEach(element => {
-            result[element] = getValue(userName,element);
-        });
-    } else {
-        result[key] = getValue(userName,key);
-    }
+    result[key] = await getValue(userName,key);
     res.send(result);
 })
 
@@ -232,14 +227,14 @@ apiRouter.post('/appointments/create', checkAuth, async (req,res) => {
         res.status(400).send({error: 'One or more of the fields are empty. Please check your response and resubmit.'})
         return;
     }
-    if (appointmentData.name===getValue(userName,'name') && appointmentData.dateOfBirth===getValue(userName,'dateOfBirth')) {
+    if (appointmentData.name===await getValue(userName,'name') && appointmentData.dateOfBirth===await getValue(userName,'dateOfBirth')) {
         setValue(userName,'gender',appointmentData.gender);
         setValue(userName,'phone',appointmentData.phone);
         setValue(userName,'address',appointmentData.address)
     }
     appointmentData = await getChatgptResponse(appointmentData);
     appointmentData.schedulingClass = determineSchedulingClass(appointmentData);
-    let userAppointments = getValue(userName,'appointments');
+    let userAppointments = await getValue(userName,'appointments');
     userAppointments.push({[req.body.appointmentID]:appointmentData});
     setValue(userName,'appointments',userAppointments);
     res.status(200).send({apptData: appointmentData});
@@ -286,8 +281,8 @@ apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,r
     const apptData = req.body.appointmentData;
     const userName = req.cookies.userName;
     const apptId = req.body.appointmentId;
-    let userAppointments = getValue(userName,'appointments');
-    let doctorAppointments = getValue(apptData.doctor,'appointments')
+    let userAppointments = await getValue(userName,'appointments');
+    let doctorAppointments = await getValue(apptData.doctor,'appointments')
     userAppointments.forEach(item => {if(Object.keys(item)[0]===apptId) {item[apptId] = apptData}});
     doctorAppointments.push({[apptId]: apptData});
     setValue(userName,'appointments',userAppointments);
