@@ -4,10 +4,13 @@ const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
 const app = express();
 const openai = require('openai');
+const { MongoClient } = require('mongodb');
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 const config = require('./config.json');
 const apiKey = config.OPENAI_API_KEY;
+const dbConfig = require('./dbConfig.json');
+const url = dbConfig.uri;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -290,3 +293,13 @@ app.use((_req,res) => {
 app.listen(port, () => {
     console.log("Webserver started.")
 })
+
+//TODO: Redo registration
+//TODO: Create users
+//TODO: Create doctors
+//TODO: User Exists
+//TODO: Get value
+//TODO: Get all
+//TODO: Set value
+//TODO: Make sure everything is ok in users if email key is removed
+//TODO: Check things that use doctors endpoint (appointments doctor vs patient name, create doctors list)
