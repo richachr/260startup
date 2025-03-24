@@ -62,11 +62,12 @@ async function deleteAppointment(id,doctor,setAppointments) {
 function Appointment({data, userName, doctors, onAppointmentsChange}) {
     const apptInfo = Object.values(data)[0];
     const idValue = Object.keys(data)[0];
+    const doctorInfo = doctors.find((item) => {item.email == apptInfo.doctor});
     
     return (
         <div className="appointment" id={idValue}>
             <div className="denseInfoContainer">
-                <span>{apptInfo.doctor===userName ? apptInfo.name : doctors[apptInfo.doctor]}</span>
+                <span>{apptInfo.doctor===userName ? apptInfo.name : doctorInfo.name}</span>
                 <span>{apptInfo.time ? new Date(apptInfo.time).toLocaleString("en-US",{timeZone: "America/Denver", dateStyle: "long", timeStyle: "short"}) : "Unscheduled"}</span>
                 <div className="additionalApptInfo" style={{width: 0, height: 0}}>
                     <p>Patient Name: {apptInfo.name}</p>
