@@ -61,7 +61,7 @@ async function logout() {
 
 export default function PostAuthHeader() {
     const navigate = useNavigate();
-    const [name,setName] = React.useState(undefined);
+    const [name,setName] = React.useState(null);
     useEffect(() => {
         const getName = async () => {
             const fetchedName = await authCheckName(navigate);

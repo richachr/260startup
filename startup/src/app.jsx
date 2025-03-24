@@ -12,7 +12,7 @@ import { CreateAppointment } from './postAuth/create/create';
 import { Scheduler } from './postAuth/scheduler/scheduler';
 
 export default function App() {
-    const [userName, setUserName] = React.useState(undefined);
+    const [userName, setUserName] = React.useState(null);
     const [currentApptId, setCurrentApptId] = React.useState(null);
     const [currentApptData, setCurrentApptData] = React.useState(null);
 

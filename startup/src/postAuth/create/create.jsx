@@ -33,17 +33,17 @@ function DoctorsInput(props) {
 export function CreateAppointment(props) {
     const navigate = useNavigate();
     const savedData = props.currentApptData ? Object.values(props.currentApptData)[0] : {};
-    const [userData, setUserData] = React.useState({name: "", dateOfBirth: undefined})
+    const [userData, setUserData] = React.useState({name: "", dateOfBirth: null})
     const [name,setName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
-    const [gender, setGender] = useState(undefined);
-    const [phone, setPhone] = useState(undefined);
-    const [address, setAddress] = useState(undefined);
-    const [doctor, setDoctor] = useState(undefined);
-    const [purpose, setPurpose] = useState(undefined);
-    const [painLevel, setPainLevel] = useState(undefined);
-    const [urgencyLevel, setUrgencyLevel] = useState(undefined);
-    const [symptoms, setSymptoms] = useState(undefined);
+    const [gender, setGender] = useState(null);
+    const [phone, setPhone] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [doctor, setDoctor] = useState(null);
+    const [purpose, setPurpose] = useState(null);
+    const [painLevel, setPainLevel] = useState(null);
+    const [urgencyLevel, setUrgencyLevel] = useState(null);
+    const [symptoms, setSymptoms] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -115,7 +115,7 @@ export function CreateAppointment(props) {
                 <div id="postAuth" className="formItem">
                     <label for="gender">What's the patient's gender?</label>
                     <select name="gender" id="gender" value={gender} onChange={(e) => setGender(e.target.value)}>
-                        <option value={undefined}></option>
+                        <option></option>
                         <option value="Female">Female</option>
                         <option value="Male">Male</option>
                     </select>
