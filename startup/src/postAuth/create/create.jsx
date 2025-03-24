@@ -23,8 +23,8 @@ function DoctorsInput(props) {
     return (
         <select name="doctor" id="doctor" value={props.doctor} onChange={(e) => props.setDoctor(e.target.value)}>
             <option></option>
-            {Object.entries(doctors).map(([key,value]) => {
-                return <option key={key} value={key}>{`Dr. ${value}`}</option>
+            {doctors.map((item) => {
+                return <option key={item.email} value={item.email}>{`Dr. ${item.name}`}</option>
             })}
         </select>
     )
