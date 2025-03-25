@@ -63,11 +63,10 @@ async function getValue(userName,key) {
 
 function setValue(userName,key,value) {
     try {
-        users[userName][key] = value;
+        users.updateOne({email: userName},{[key]:value});
     } catch {
         console.error(`Error setting value ${key}.`);
     }
-    
 }
 
 function setCookies(res,userName) {
@@ -130,7 +129,7 @@ apiRouter.post('/register', async (req, res) => {
         return;
     }
     if(userData.doctorStatus) {
-        doctors[userData.email] = userData.name;
+        doctors.insertOne({email: userData.email, name: userData.name});
     }
     try {
         const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -139,7 +138,7 @@ apiRouter.post('/register', async (req, res) => {
     } catch (err) {
         console.error(`Error: ${err}`);
     }
-    users[userData.email] = userData;
+    users.insertOne(userData);
     setCookies(res,userData.email);
     res.status(201).send({userName: userData.email});
 })
@@ -196,7 +195,8 @@ apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
 })
 
 apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
-    res.status(200).send(doctors);
+    const cursor = doctors.find({});
+    res.status(200).send(cursor.toArray());
 })
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
@@ -295,8 +295,5 @@ app.listen(port, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Redo registration
-//TODO: Set value
-//TODO: Doctors endpoint
 //TODO: Make sure everything is ok in users if email key is removed
 //TODO: Check things that use doctors endpoint (appointments doctor vs patient name, create doctors list)
