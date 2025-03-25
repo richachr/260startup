@@ -45,7 +45,7 @@ users.insertOne({
 doctors.insertOne({email: "james.howard@ihc.org", name: "James Howard"});
 
 async function userExists(userName) {
-    if(userName && await users.findOne({email: userName})) {
+    if(userName && await users.countDocuments({email: userName}) > 0) {
         return true;
     }
     return false;
@@ -201,15 +201,8 @@ apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
-    const storedData = users[userName];
-    let result = {...storedData};
-    if(result.hashedPassword) {
-        delete result.hashedPassword;
-    }
-    if(result.authToken) {
-        delete result.authToken;
-    }
-    res.status(200).send(result);
+    const storedData = await users.findOne({email: userName}, {_id: 0, hashedPassword: 0, authToken: 0});
+    res.status(200).send(storedData);
 })
 
 apiRouter.post('/data/get', checkAuth, async (req,res) => {
@@ -290,7 +283,7 @@ apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,r
     res.sendStatus(200);
 })
 
-app.use(function (err,_req,res,next) {
+app.use(function (err,_req,res,_next) {
     res.status(500).send({error: err.message})
 })
 
@@ -303,11 +296,7 @@ app.listen(port, () => {
 })
 
 //TODO: Redo registration
-//TODO: Create users
-//TODO: Create doctors
-//TODO: User Exists
-//TODO: Get value
-//TODO: Get all
 //TODO: Set value
+//TODO: Doctors endpoint
 //TODO: Make sure everything is ok in users if email key is removed
 //TODO: Check things that use doctors endpoint (appointments doctor vs patient name, create doctors list)
