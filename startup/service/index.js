@@ -45,7 +45,7 @@ async function getValue(userName,key) {
     try {
         const filter = {"_id": 0};
         filter[key] = 1;
-        const result = await users.findOne({"_id": userName},options=filter);
+        const result = await users.findOne({"_id": userName},{"projection": filter});
         return result[key];
     } catch {
         return undefined;
@@ -198,7 +198,7 @@ apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
-    const storedData = await users.findOne({"_id": userName}, {"_id": 0, "hashedPassword": 0, "authToken": 0});
+    const storedData = await users.findOne({"_id": userName}, {"projection": {"_id": 0, "hashedPassword": 0, "authToken": 0}});
     res.status(200).send(storedData);
 })
 
