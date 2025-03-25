@@ -10,7 +10,7 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 const config = require('./config.json');
 const apiKey = config.OPENAI_API_KEY;
 const dbConfig = require('./dbConfig.json');
-const url = dbConfig.uri;
+const url = `mongodb+srv://${dbConfig.userName}:${dbConfig.password}@${dbConfig.hostname}`;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -34,18 +34,8 @@ app.use('/api', apiRouter);
     }
 })();
 
-users.insertOne({
-    name: "James Howard",
-    email: "james.howard@ihc.org",
-    doctorStatus: "true",
-    dateOfBirth: "1973-06-07",
-    appointments: [],
-    hashedPassword: "$2b$10$fMq04y1YKZWaaggHd6GMI.KmnKuMQXavmF.8d/kr1d9wx0NV5vP0m"
-  });
-doctors.insertOne({email: "james.howard@ihc.org", name: "James Howard"});
-
 async function userExists(userName) {
-    if(userName && await users.countDocuments({email: userName}) > 0) {
+    if(userName && await users.countDocuments({"_id": userName}) > 0) {
         return true;
     }
     return false;
@@ -53,7 +43,9 @@ async function userExists(userName) {
 
 async function getValue(userName,key) {
     try {
-        const result = await users.findOne({email: userName},{_id: 0, [key]:1});
+        const filter = {"_id": 0};
+        filter[key] = 1;
+        const result = await users.findOne({"_id": userName},options=filter);
         return result[key];
     } catch {
         return undefined;
@@ -61,17 +53,17 @@ async function getValue(userName,key) {
     
 }
 
-function setValue(userName,key,value) {
+async function setValue(userName,key,value) {
     try {
-        users.updateOne({email: userName},{[key]:value});
-    } catch {
-        console.error(`Error setting value ${key}.`);
+        await users.updateOne({"_id": userName},{"$set": {[key]: value}});
+    } catch (err) {
+        console.error(`Error setting value ${key}: ${err.message}`);
     }
 }
 
-function setCookies(res,userName) {
+async function setCookies(res,userName) {
     const token = uuid.v4();
-    setValue(userName, 'authToken', token)
+    await setValue(userName, 'authToken', token)
     res.cookie('authToken', token, {
         secure: true,
         httpOnly: true,
@@ -129,7 +121,7 @@ apiRouter.post('/register', async (req, res) => {
         return;
     }
     if(userData.doctorStatus) {
-        doctors.insertOne({email: userData.email, name: userData.name});
+        doctors.insertOne({"_id": userData.email, "email": userData.email, "name": userData.name});
     }
     try {
         const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -138,8 +130,13 @@ apiRouter.post('/register', async (req, res) => {
     } catch (err) {
         console.error(`Error: ${err}`);
     }
-    users.insertOne(userData);
-    setCookies(res,userData.email);
+    userData._id = userData.email;
+    userData.authToken = null;
+    userData.gender = null;
+    userData.phone = null;
+    userData.address = null;
+    await users.insertOne(userData);
+    await setCookies(res,userData.email);
     res.status(201).send({userName: userData.email});
 })
 
@@ -156,7 +153,7 @@ apiRouter.post('/login', async (req,res) => {
         passwordsMatch = await bcrypt.compare(loginData.password, storedPassword);
     }
     if(passwordsMatch) {
-        setCookies(res,loginData.email);
+        await setCookies(res,loginData.email);
         res.status(200).send({userName: loginData.email});
         return;
     } else {
@@ -167,15 +164,14 @@ apiRouter.post('/login', async (req,res) => {
 
 apiRouter.delete('/logout', async (req,res) => {
     const userName = req.cookies.userName;
-    setValue(userName,'authToken',null);
+    await setValue(userName,'authToken',null);
     res.clearCookie('authToken');
     res.clearCookie('userName');
     res.sendStatus(204);
 })
 
 apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
-    const userName = req.cookies.userName;
-    let userAppointments = await getValue(userName,'appointments');
+    let userAppointments = await getValue(req.body.patient,'appointments');
     let doctorAppointments = await getValue(req.body.doctor,'appointments');
     let newUserAppointments = [];
     let newDoctorAppointments = [];
@@ -189,19 +185,20 @@ apiRouter.delete('/appointments/delete', checkAuth, async (req,res) => {
             newDoctorAppointments.push(element);
         }
     });
-    setValue(userName,'appointments',newUserAppointments);
+    await setValue(req.body.patient,'appointments',newUserAppointments);
     setValue(req.body.doctor,'appointments',newDoctorAppointments);
     res.status(200).send({'updatedAppointments': newUserAppointments});
 })
 
 apiRouter.get('/doctors/', checkAuth, async (_req,res) => {
     const cursor = doctors.find({});
-    res.status(200).send(cursor.toArray());
+    const doctorsArray = await cursor.toArray();
+    res.status(200).send(doctorsArray);
 })
 
 apiRouter.get('/data/get/all', checkAuth, async (req,res) => {
     const userName = req.cookies.userName;
-    const storedData = await users.findOne({email: userName}, {_id: 0, hashedPassword: 0, authToken: 0});
+    const storedData = await users.findOne({"_id": userName}, {"_id": 0, "hashedPassword": 0, "authToken": 0});
     res.status(200).send(storedData);
 })
 
@@ -229,7 +226,7 @@ apiRouter.post('/appointments/create', checkAuth, async (req,res) => {
     appointmentData.schedulingClass = determineSchedulingClass(appointmentData);
     let userAppointments = await getValue(userName,'appointments');
     userAppointments.push({[req.body.appointmentID]:appointmentData});
-    setValue(userName,'appointments',userAppointments);
+    await setValue(userName,'appointments',userAppointments);
     res.status(200).send({apptData: appointmentData});
 })
 
@@ -278,7 +275,7 @@ apiRouter.post('/appoointments/schedule/setAppointment', checkAuth, async (req,r
     let doctorAppointments = await getValue(apptData.doctor,'appointments')
     userAppointments.forEach(item => {if(Object.keys(item)[0]===apptId) {item[apptId] = apptData}});
     doctorAppointments.push({[apptId]: apptData});
-    setValue(userName,'appointments',userAppointments);
+    await setValue(userName,'appointments',userAppointments);
     setValue(apptData.doctor,'appointments',doctorAppointments);
     res.sendStatus(200);
 })
@@ -295,5 +292,4 @@ app.listen(port, () => {
     console.log("Webserver started.")
 })
 
-//TODO: Make sure everything is ok in users if email key is removed
-//TODO: Check things that use doctors endpoint (appointments doctor vs patient name, create doctors list)
+//TODO: GetValue sends all
