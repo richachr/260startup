@@ -5,7 +5,7 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
 
 function DoctorsInput(props) {
-    const [doctors, setDoctors] = React.useState({});
+    const [doctors, setDoctors] = React.useState([]);
     useEffect(() => {
         const fetchDoctors = async () => {
             try {
@@ -23,7 +23,7 @@ function DoctorsInput(props) {
     return (
         <select name="doctor" id="doctor" value={props.doctor} onChange={(e) => props.setDoctor(e.target.value)}>
             <option></option>
-            {doctors.map((item) => {
+            {doctors?.map((item) => {
                 return <option key={item.email} value={item.email}>{`Dr. ${item.name}`}</option>
             })}
         </select>
