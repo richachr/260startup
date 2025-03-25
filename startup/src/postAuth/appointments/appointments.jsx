@@ -44,12 +44,13 @@ function showInfo(id) {
     }
 }
 
-async function deleteAppointment(id,doctor,setAppointments) {
+async function deleteAppointment(id,patient,doctor,setAppointments) {
     const response = await fetch('/api/appointments/delete', {
         method: 'DELETE',
         body: JSON.stringify({
             "id": id,
-            "doctor": doctor
+            "doctor": doctor,
+            "patient": patient
         }),
         headers: {
             "Content-type": 'application/json'
@@ -62,8 +63,7 @@ async function deleteAppointment(id,doctor,setAppointments) {
 function Appointment({data, userName, doctors, onAppointmentsChange}) {
     const apptInfo = Object.values(data)[0];
     const idValue = Object.keys(data)[0];
-    const doctorInfo = doctors.find((item) => {item.email == apptInfo.doctor});
-    
+    const doctorInfo = doctors.find((item) => item.email === apptInfo.doctor);
     return (
         <div className="appointment" id={idValue}>
             <div className="denseInfoContainer">
@@ -86,7 +86,7 @@ function Appointment({data, userName, doctors, onAppointmentsChange}) {
             </div>
             <div className="apptActions">
                 <button className="secondary" onClick={() => showInfo(idValue)}><FontAwesomeIcon icon={faFileLines} className="fontAwesome" /></button>
-                <button className="danger" onClick={() => deleteAppointment(idValue,apptInfo.doctor,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
+                <button className="danger" onClick={() => deleteAppointment(idValue,apptInfo.patientEmail,apptInfo.doctor,onAppointmentsChange)}><FontAwesomeIcon icon={faTrashCan} className="fontAwesome" /></button>
             </div>
         </div>
     )
@@ -94,7 +94,7 @@ function Appointment({data, userName, doctors, onAppointmentsChange}) {
 
 export function Appointments(props) {
     const [appointments, setAppointments] = React.useState([]);
-    const [doctors,setDoctors] = React.useState({});
+    const [doctors,setDoctors] = React.useState([]);
     useEffect(() => {
         const fetchData = async () => {
             const newAppointments = await fetchAppointments();
@@ -111,6 +111,7 @@ export function Appointments(props) {
         fetchDoctors();
     },[appointments]);
 
+    if(!doctors.length) {return <div className="mainContent" style={{display:"flex", justifyContent:"center"}}><p>Loading...</p></div>}
     return (
         <div className="mainContent" id="postAuth">
             <img id="postAuth" src="docs-together.png" alt="Doctors" />
